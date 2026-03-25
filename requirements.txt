@@ -1,0 +1,14 @@
+flask
+flask-cors
+gunicorn
+pymongo
+bcrypt
+pandas
+razorpay
+fastapi
+uvicorn
+python-dotenv
+openai
+python-jose
+passlib[bcrypt]
+asyncpg

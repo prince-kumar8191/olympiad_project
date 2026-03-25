@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+python-dotenv
+openai
+python-jose
+passlib[bcrypt]
+asyncpg
