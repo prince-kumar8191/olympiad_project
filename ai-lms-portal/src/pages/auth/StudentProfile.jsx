@@ -1,171 +1,4 @@
 
-// import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-
-// export default function OlympiadStudentProfile() {
-
-//   const navigate = useNavigate();
-
-//   // 👇 State for student data
-//   const [student, setStudent] = useState({
-//     name: "",
-//     section: "",
-//     class: "",
-//     email: "",
-//     phone: "",
-//     address: "",
-//     school: "",
-//     skills: [],
-//     profileCompletion: 0
-//   });
-
-//   // 👇 Fetch student data from backend on mount
-//   useEffect(() => {
-//     const fetchStudent = async () => {
-//       try {
-//         const res = await axios.get("http://localhost:5000/student-profile"); // backend endpoint
-//         setStudent(res.data);
-//       } catch (err) {
-//         console.error(err);
-//         alert("Failed to fetch profile data");
-//       }
-//     };
-
-//     fetchStudent();
-//   }, []);
-
-//   // 👇 Calculate profile completion dynamically
-//   useEffect(() => {
-//     let totalFields = Object.keys(student).length;
-//     let filledFields = Object.values(student).filter(
-//       (val) => val !== "" && val !== null
-//     ).length;
-//     setStudent(prev => ({ ...prev, profileCompletion: Math.round((filledFields / totalFields) * 100) }));
-//   }, [student.name, student.section, student.class, student.email, student.phone, student.address, student.school]);
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-8">
-
-//       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-
-//         {/* LEFT PROFILE CARD */}
-//         <div className="bg-white p-6 rounded-xl shadow-md">
-
-//           <div className="flex items-center gap-4">
-//             <div className="w-16 h-16 bg-indigo-600 text-white flex items-center justify-center rounded-full text-xl font-bold">
-//               {student.name ? student.name.charAt(0).toUpperCase() : "S"}
-//             </div>
-
-//             <div>
-//               <h2 className="text-xl font-bold">{student.name || "Name"}</h2>
-//               <p className="text-gray-500">{student.section || "Section"}</p>
-//               <p className="text-gray-500">{student.class || "Class"}</p>
-//             </div>
-//           </div>
-
-//           <hr className="my-4" />
-
-//           <p className="text-gray-600">📍 India</p>
-//           <p className="text-gray-600 mt-2">📧 {student.email || "student@email.com"}</p>
-//           <p className="text-gray-600 mt-2">📞 {student.phone || "+91 0000000000"}</p>
-//           <p className="text-gray-600 mt-2">Address - {student.address || "School Address"}</p>
-//           <p className="text-gray-600 mt-2">{student.school || "School Name"}</p>
-
-//           <button
-//             onClick={() => navigate("/Edit_profile", { state: student })}
-//             className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
-//           >
-//             Edit Profile
-//           </button>
-
-//         </div>
-
-//         {/* RIGHT SECTION */}
-//         <div className="md:col-span-2 space-y-6">
-
-//           {/* PROFILE SUMMARY */}
-//           <div className="bg-white p-6 rounded-xl shadow-md">
-//             <h3 className="text-xl font-bold mb-3">Profile Summary</h3>
-//             <p className="text-gray-600">
-//               Passionate Olympiad student interested in Mathematics, Science, and Coding competitions.
-//               Preparing for national-level olympiad exams and aiming for top rank.
-//             </p>
-//           </div>
-
-//           {/* PROFILE COMPLETION */}
-//           <div className="bg-white p-6 rounded-xl shadow-md">
-//             <h3 className="text-xl font-bold mb-3">Profile Completion</h3>
-//             <div className="w-full bg-gray-200 rounded-full h-4">
-//               <div
-//                 className="bg-green-500 h-4 rounded-full"
-//                 style={{ width: `${student.profileCompletion || 0}%` }}
-//               ></div>
-//             </div>
-//             <p className="mt-2 text-gray-600">{student.profileCompletion || 0}% Profile Completed</p>
-//           </div>
-
-//           {/* SKILLS */}
-//           <div className="bg-white p-6 rounded-xl shadow-md">
-//             <h3 className="text-xl font-bold mb-4">Skills</h3>
-//             <div className="flex flex-wrap gap-3">
-//               {student.skills && student.skills.length > 0
-//                 ? student.skills.map((skill, idx) => (
-//                     <span key={idx} className="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full">{skill}</span>
-//                   ))
-//                 : ["Mathematics", "Science", "Logical Reasoning", "Coding"].map((skill, idx) => (
-//                     <span key={idx} className="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full">{skill}</span>
-//                   ))
-//               }
-//             </div>
-//           </div>
-
-//           {/* TEST HISTORY */}
-//           <div className="bg-white p-6 rounded-xl shadow-md">
-//             <h3 className="text-xl font-bold mb-4">Test History</h3>
-//             <table className="w-full border">
-//               <thead className="bg-gray-200">
-//                 <tr>
-//                   <th className="p-2">Exam</th>
-//                   <th className="p-2">Score</th>
-//                   <th className="p-2">Rank</th>
-//                   <th className="p-2">Date</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 <tr className="text-center border-t">
-//                   <td className="p-2">Math Olympiad</td>
-//                   <td className="p-2">00</td>
-//                   <td className="p-2">00</td>
-//                   <td className="p-2"></td>
-//                 </tr>
-//                 <tr className="text-center border-t">
-//                   <td className="p-2">Science Olympiad</td>
-//                   <td className="p-2">00</td>
-//                   <td className="p-2">00</td>
-//                   <td className="p-2"></td>
-//                 </tr>
-//                 <tr className="text-center border-t">
-//                   <td className="p-2">Computer Olympiad</td>
-//                   <td className="p-2">00</td>
-//                   <td className="p-2">00</td>
-//                   <td className="p-2"></td>
-//                 </tr>
-//               </tbody>
-//             </table>
-//           </div>
-
-//         </div>
-
-//       </div>
-
-//     </div>
-//   );
-// }
-
-
-
-
 
 
 
@@ -178,13 +11,15 @@ import axios from "axios";
 export default function OlympiadStudentProfile() {
   const navigate = useNavigate();
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const [student, setStudent] = useState({
     name: "",
     section: "",
     student_class: "",
     email: "",
     phone: "",
-    StudentId:"",
+    StudentId: "",
     address: "",
     school: "",
     skills: [],
@@ -196,168 +31,335 @@ export default function OlympiadStudentProfile() {
     mother_name: "",
     school_code: "",
     school_address: "",
-    blood_group: ""
+    blood_group: "",
+    father_occupation: "",
+    mother_occupation: "",
+    dob: ""
   });
 
   const [profileCompletion, setProfileCompletion] = useState(0);
 
-  // Load from localStorage and backend
+  const safeSkills = Array.isArray(student.skills) ? student.skills : [];
+
+  // FETCH DATA
   useEffect(() => {
     const storedStudent = JSON.parse(localStorage.getItem("student") || "{}");
 
     if (storedStudent && Object.keys(storedStudent).length > 0) {
-      setStudent(storedStudent);
+      setStudent({
+        ...storedStudent,
+        skills: Array.isArray(storedStudent.skills)
+          ? storedStudent.skills
+          : []
+      });
     }
 
     if (storedStudent.email) {
-      axios.get(`http://localhost:5000/get-student/${storedStudent.email}`)
-        .then(res => {
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/get-student/${storedStudent.email}`)
+        .then((res) => {
           if (res.data.success && res.data.student) {
-            const dbStudent = res.data.student;
+            const db = res.data.student;
+
             const studentData = {
-              name: dbStudent.name || "",
-              email: dbStudent.email || "",
-              phone: dbStudent.phone || "",
-              StudentId: dbStudent.StudentId || dbStudent.student_id || "",
-              dob: dbStudent.dob || "",
-              father_name: dbStudent.father_name || "",
-              mother_name: dbStudent.mother_name || "",
-              student_class: dbStudent.student_class || dbStudent.class || dbStudent.class_name || "",
-              section: dbStudent.section || "",
-              school: dbStudent.school || dbStudent.school_name || "",
-              school_code: dbStudent.school_code || "",
-              school_address: dbStudent.school_address || "",
-              address: dbStudent.address || "",
-              city: dbStudent.city || "",
-              state: dbStudent.state || "",
-              pincode: dbStudent.pincode || "",
-              father_occupation: dbStudent.father_occupation || "",
-              mother_occupation: dbStudent.mother_occupation || "",
-              blood_group: dbStudent.blood_group || "",
-              photo: dbStudent.photo || "",
-              skills: dbStudent.skills || []
+              name: db.name || "",
+              email: db.email || "",
+              phone: db.phone || "",
+              StudentId: db.StudentId || db.student_id || "",
+              dob: db.dob || "",
+              father_name: db.father_name || "",
+              mother_name: db.mother_name || "",
+              father_occupation: db.father_occupation || "",
+              mother_occupation: db.mother_occupation || "",
+              student_class:
+                db.student_class || db.class || db.class_name || "",
+              section: db.section || "",
+              school: db.school || db.school_name || "",
+              school_code: db.school_code || "",
+              school_address: db.school_address || "",
+              address: db.address || "",
+              city: db.city || "",
+              state: db.state || "",
+              pincode: db.pincode || "",
+              blood_group: db.blood_group || "",
+              photo: db.photo || "",
+              skills: Array.isArray(db.skills) ? db.skills : []
             };
 
             setStudent(studentData);
             localStorage.setItem("student", JSON.stringify(studentData));
           }
         })
-        .catch(err => console.log("Fetch Error:", err));
+        .catch(() => {
+          setStudent((prev) => ({ ...prev, skills: [] }));
+        });
     }
   }, []);
 
-  // Profile Completion Calculation
+  // PROFILE COMPLETION
   useEffect(() => {
-    const fields = [
-      student.name,
-      student.section,
-      student.student_class,
-      student.email,
-      student.phone,
-      student.StudentId,
-      student.address,
-      student.school,
-      student.photo,
-      student.skills,
-      student.city,
-      student.state,
-      student.pincode,
-      student.father_name,
-      student.mother_name,
-      student.school_code,
-      student.school_address,
-      student.blood_group
-    ];
+    const fields = Object.values(student);
+    const filled = fields.filter((f) =>
+      Array.isArray(f) ? f.length > 0 : f !== ""
+    ).length;
 
-    const filledFields = fields.filter(field => {
-      if (field === null || field === undefined) return false;
-      if (typeof field === "string") return field.trim() !== "";
-      if (Array.isArray(field)) return field.length > 0;
-      return true;
-    }).length;
-
-    const percent = Math.round((filledFields / fields.length) * 100);
-    setProfileCompletion(percent);
+    setProfileCompletion(Math.round((filled / fields.length) * 100));
   }, [student]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="min-h-screen flex text-white mainBg">
+      
+      
 
-        {/* LEFT PROFILE CARD */}
-        <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-indigo-600 text-white flex items-center justify-center rounded-full text-xl font-bold overflow-hidden">
-              {student.photo
-                ? <img src={student.photo} alt="Profile" className="w-full h-full object-cover" />
-                : student.name
-                  ? student.name.charAt(0).toUpperCase()
-                  : "S"
-              }
-            </div>
 
-            <div>
-              <h2 className="text-xl font-bold">{student.name || "Name"}</h2>
-              <p className="text-gray-500">Section - {student.section || ""} </p>
-              <p className="text-gray-500">{student.student_class || "Class"}</p>
-              <p className="text-black font-bold">{student.StudentId || "StudentId"}</p>
-            </div>
-          </div>
+      <div className="w-64 p-5 hidden lg:block sidebarGlass">
+        <h2 className="text-2xl font-bold mb-6 text-pink-400">
+          Student Portal
+        </h2>
 
-          <hr className="my-4" />
-          <p className="text-gray-600">📍 India</p>
-          <p className="text-gray-600 mt-2">📧 {student.email || "student@email.com"}</p>
-          <p className="text-gray-600 mt-2">📞 {student.phone || "+91 0000000000"}</p>
-          <p className="text-gray-600 mt-2">Address - {student.address || "School Address"}</p>
-          <p className="text-gray-600 mt-2">{student.school || "School Name"}</p>
+        <div className="space-y-2">
+
+          <button onClick={() => navigate("/Student_Dashboard")} className="navItem">🏠 Dashboard</button>
+
+          <button className="navItem active">👤 My Profile</button>
+
+          <button onClick={() => navigate("/ExamInstructions")} className="navItem">🧪 My Exams</button>
+
+          {/* 🔥 Separate Mock Test */}
+          <button onClick={() => navigate("/MockTests")} className="navItem">
+            📝 Mock Tests
+          </button>
+
+          {/* 🔥 Separate PYQ */}
+          <button onClick={() => navigate("/PYQ")} className="navItem">
+            📚 Previous Year Questions
+          </button>
+
+          <button onClick={() => navigate("/register")} className="navItem">
+            🎯 Register Now
+          </button>
+
+          <button onClick={() => navigate("/Results")} className="navItem">
+            📊 Results
+          </button>
+
+          <button onClick={() => navigate("/Certificates")} className="navItem">
+            🏆 Certificates
+          </button>
+
+          {/* 🔥 Separate Benefit */}
+          <button onClick={() => navigate("/BenefitPay")} className="navItem">
+            💰 Benefit & Pay
+          </button>
+
+          {/* 🔥 Separate Refer */}
+          <button onClick={() => navigate("/StudentRefer")} className="navItem">
+            🤝 Refer & Earn
+          </button>
 
           <button
-            onClick={() => navigate("/Edit_profile", { state: student })}
-            className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300"
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = "/login";
+            }}
+            className="navItem logout mt-3"
           >
-            Edit Profile
+            🔓 Logout
           </button>
-        </div>
-
-        {/* RIGHT SECTION */}
-        <div className="md:col-span-2 space-y-6">
-          <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-xl font-bold mb-3">Profile Summary</h3>
-            <p className="text-gray-600">
-              Welcome {student.name || "Student"}! Your registered email is {student.email || "student@email.com"}.
-            </p>
-          </div>
-
-          {/* PROFILE COMPLETION */}
-          <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-xl font-bold mb-3">Profile Completion</h3>
-            <div className="w-full bg-gray-200 rounded-full h-4">
-              <div
-                className="bg-green-500 h-4 rounded-full transition-all duration-500"
-                style={{ width: `${profileCompletion}%` }}
-              ></div>
-            </div>
-            <p className="mt-2 text-gray-600">{profileCompletion}% Profile Completed</p>
-          </div>
-
-          {/* SKILLS */}
-          <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-xl font-bold mb-4">Skills</h3>
-            <div className="flex flex-wrap gap-3">
-              {student.skills && student.skills.length > 0
-                ? student.skills.map((skill, idx) => (
-                  <span key={idx} className="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full">{skill}</span>
-                ))
-                : ["Mathematics", "Science", "Logical Reasoning", "Coding"].map((skill, idx) => (
-                  <span key={idx} className="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full">{skill}</span>
-                ))
-              }
-            </div>
-          </div>
 
         </div>
-
       </div>
+
+      {/* MAIN */}
+      <div className="flex-1 p-6">
+
+        <h1 className="text-3xl font-bold mb-6 text-pink-300 fadeIn">
+          Welcome {student.name || "Student"} 👋
+        </h1>
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          {/* LEFT CARD */}
+          <div className="glassCard slideUp">
+
+            <div className="flex items-center gap-4">
+              <div className="avatar">
+                {student.photo ? (
+                  <img src={student.photo} alt="" />
+                ) : (
+                  student.name?.charAt(0) || "S"
+                )}
+              </div>
+
+              <div>
+                <h2 className="font-bold text-lg">{student.name}</h2>
+                <p> Class - {student.student_class}</p><p> Section - {student.section}</p>
+                <p className="text-sm">Student Id - {student.StudentId}</p>
+              </div>
+            </div>
+
+            <hr className="my-4 border-white/10" />
+
+            <p>📧 E-mail: {student.email}</p>
+            <p>📞Phone: {student.phone}</p>
+            <p>📍Address: {student.city} {student.state}</p>
+            <p>🏫School Name: {student.school}</p>
+            <p>🏫 Code: {student.school_code}</p>
+            <p>🧬 Blood: {student.blood_group}</p>
+
+            <button
+              onClick={() => navigate("/Edit_profile", { state: student })}
+              className="btnPrimary mt-4"
+            >
+              Edit Profile
+            </button>
+          </div>
+
+          {/* RIGHT */}
+          <div className="md:col-span-2 space-y-6">
+
+            {/* SUMMARY */}
+            <div className="glassCard slideUp delay1">
+              <h3 className="text-xl font-bold mb-2">Profile Summary</h3>
+              <p>
+                Welcome {student.name}! Your registered email is {student.email}.
+              </p>
+            </div>
+
+            {/* FULL DETAILS */}
+            <div className="glassCard slideUp delay2">
+              <h3 className="text-xl font-bold mb-3">Full Details</h3>
+
+              <div className="grid md:grid-cols-2 gap-3 text-sm">
+
+                <p>👨 Father: {student.father_name}</p>
+                <p>👩 Mother: {student.mother_name}</p>
+                <p>💼 Father Job: {student.father_occupation}</p>
+                <p>💼 Mother Job: {student.mother_occupation}</p>
+                <p>🏠 Address: {student.address}</p>
+                <p>🏫 School Address: {student.school_address}</p>
+                <p>📮 Pincode: {student.pincode}</p>
+                <p>🎂 DOB: {student.dob}</p>
+
+              </div>
+            </div>
+
+            {/* PROGRESS */}
+            <div className="glassCard slideUp delay3">
+              <h3 className="text-xl font-bold mb-3">Profile Completion</h3>
+
+              <div className="w-full bg-white/10 rounded-full h-4">
+                <div
+                  className="h-4 rounded-full progressBar"
+                  style={{ width: `${profileCompletion}%` }}
+                ></div>
+              </div>
+
+              <p className="mt-2">{profileCompletion}% Completed</p>
+            </div>
+
+            {/* SKILLS */}
+            <div className="glassCard slideUp delay4">
+              <h3 className="text-xl font-bold mb-3">Skills</h3>
+
+              <div className="flex flex-wrap gap-2">
+                {(safeSkills.length > 0
+                  ? safeSkills
+                  : ["Mathematics", "Science", "Logical Reasoning", "Coding"]
+                ).map((s, i) => (
+                  <span key={i} className="skillTag">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* STYLE */}
+      <style>{`
+
+        .mainBg{
+          background: linear-gradient(135deg,#14001f,#1f0036,#2a004d);
+        }
+
+        .sidebarGlass{
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(20px);
+        }
+
+        .glassCard{
+          background: rgba(255,255,255,0.06);
+          backdrop-filter: blur(20px);
+          border-radius:20px;
+          padding:20px;
+          transition:0.4s;
+        }
+
+        .glassCard:hover{
+          transform: translateY(-6px);
+          box-shadow:0 20px 60px rgba(255,0,255,0.2);
+        }
+
+        .navItem{
+          padding:10px;
+          border-radius:10px;
+          transition:0.3s;
+        }
+
+        .navItem:hover{
+          background: rgba(255,255,255,0.1);
+        }
+
+        .navItem.active{
+          background: linear-gradient(90deg,#ff00cc,#7b00ff);
+        }
+
+        .btnPrimary{
+          width:100%;
+          padding:10px;
+          border-radius:10px;
+          background: linear-gradient(90deg,#ff00cc,#7b00ff);
+        }
+
+        .avatar{
+          width:60px;
+          height:60px;
+          border-radius:50%;
+          background: linear-gradient(90deg,#ff00cc,#7b00ff);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        }
+
+        .skillTag{
+          padding:6px 12px;
+          border-radius:20px;
+          background: rgba(255,255,255,0.1);
+        }
+
+        .progressBar{
+          background: linear-gradient(90deg,#ff00cc,#7b00ff);
+        }
+
+        /* Animations */
+        .fadeIn{animation:fade 1s ease;}
+        @keyframes fade{from{opacity:0}to{opacity:1}}
+
+        .slideUp{animation:up 0.6s ease;}
+        .delay1{animation-delay:0.1s}
+        .delay2{animation-delay:0.2s}
+        .delay3{animation-delay:0.3s}
+        .delay4{animation-delay:0.4s}
+
+        @keyframes up{
+          from{transform:translateY(30px);opacity:0}
+          to{transform:translateY(0);opacity:1}
+        }
+
+      `}</style>
     </div>
   );
 }

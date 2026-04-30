@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 
 function Signup() {
-
   const navigate = useNavigate();
+
+
 
   const [form, setForm] = useState({
     name: "",
@@ -23,10 +26,10 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/signup", form);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/signup`, form);
 
-      alert(res.data.message);   // ✅ axios me data yaha hota hai
-      navigate("/login");        // optional redirect
+      alert(res.data.message);
+      navigate("/login");
 
     } catch (err) {
       console.log(err);
@@ -35,6 +38,7 @@ function Signup() {
   };
 
   return (
+
     <form onSubmit={handelsubmit}>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
 

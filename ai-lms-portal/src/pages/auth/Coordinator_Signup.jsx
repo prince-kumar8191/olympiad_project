@@ -1,9 +1,12 @@
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export default function CoordinatorSignup() {
-
   const navigate = useNavigate();
 
   // 🔹 Unique Coordinator ID Generator
@@ -18,32 +21,150 @@ export default function CoordinatorSignup() {
     name: "",
     email: "",
     mobile: "",
+    pincode: "",
     city: "",
-    department: "",
+    state: "",
+    AreaOfExperience: "",
     roleType: "",
     qualification: "",
     experience: "",
     password: "",
     confirmPassword: "",
-    resume: null
+    resume: null,
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  
-      const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  const [states, setStates] = useState([]);
+  const [loadingPincode, setLoadingPincode] = useState(false);
 
   useEffect(() => {
     setForm((prev) => ({
       ...prev,
       coordinatorId: generateCoordinatorId(),
     }));
+
+    // 🔥 India States Load
+    fetchStates();
   }, []);
 
+  // 🔥 API se states load
+  const fetchStates = async () => {
+    try {
+      const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
+      const data = await res.json();
+
+      const india = data.data.find((country) => country.name === "India");
+
+      if (india && india.states) {
+        const stateNames = india.states.map((s) => s.name);
+        setStates(stateNames);
+      }
+    } catch (error) {
+      console.error("States fetch error:", error);
+
+      // fallback list agar API fail ho jaye
+      setStates([
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chhattisgarh",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+        "Andaman and Nicobar Islands",
+        "Chandigarh",
+        "Dadra and Nagar Haveli and Daman and Diu",
+        "Delhi",
+        "Jammu and Kashmir",
+        "Ladakh",
+        "Lakshadweep",
+        "Puducherry",
+      ]);
+    }
+  };
+
+  // 🔥 Normal input change
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+  };
+
+  // 🔥 Pincode change + city/state auto fetch
+  const handlePincodeChange = async (e) => {
+    const pin = e.target.value.replace(/\D/g, ""); // only digits
+
+    setForm((prev) => ({
+      ...prev,
+      pincode: pin,
+    }));
+
+    if (pin.length === 6) {
+      try {
+        setLoadingPincode(true);
+
+        const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        const data = await res.json();
+
+        const result = data?.[0];
+
+        if (
+          result?.Status === "Success" &&
+          result?.PostOffice &&
+          result.PostOffice.length > 0
+        ) {
+          const postOffice = result.PostOffice[0];
+
+          setForm((prev) => ({
+            ...prev,
+            pincode: pin,
+            city: postOffice.District || "",
+            state: postOffice.State || "",
+          }));
+        } else {
+          alert("Invalid Pincode ❌");
+          setForm((prev) => ({
+            ...prev,
+            city: "",
+            state: "",
+          }));
+        }
+      } catch (error) {
+        console.error("Pincode fetch error:", error);
+        alert("Pincode fetch failed ❌");
+      } finally {
+        setLoadingPincode(false);
+      }
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        city: "",
+        state: "",
+      }));
+    }
   };
 
   // Resume Upload
@@ -62,11 +183,10 @@ export default function CoordinatorSignup() {
       return;
     }
 
-    
-  if (!accepted) {
-    alert("Please accept the Terms and Conditions");
-    return;
-  }
+    if (!accepted) {
+      alert("Please accept the Terms and Conditions");
+      return;
+    }
 
     const formData = new FormData();
 
@@ -74,8 +194,10 @@ export default function CoordinatorSignup() {
     formData.append("name", form.name);
     formData.append("email", form.email);
     formData.append("mobile", form.mobile);
+    formData.append("pincode", form.pincode);
     formData.append("city", form.city);
-    formData.append("department", form.department);
+    formData.append("state", form.state);
+    formData.append("AreaOfExperience", form.AreaOfExperience);
     formData.append("roleType", form.roleType);
     formData.append("qualification", form.qualification);
     formData.append("experience", form.experience);
@@ -83,12 +205,11 @@ export default function CoordinatorSignup() {
     formData.append("resume", form.resume);
 
     try {
-      const response = await fetch("http://localhost:5000/register-coordinator", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/register-coordinator`, {
         method: "POST",
         body: formData,
       });
-    
-      
+
       const data = await response.json();
 
       if (response.ok) {
@@ -98,12 +219,10 @@ export default function CoordinatorSignup() {
         localStorage.setItem("oordinatorEmail", form.email);
 
         // 🔹 open dashboard
-        navigate("/Coordinator_login");
-
+        navigate("/Waiting");
       } else {
         alert(data.message || "Registration Failed");
       }
-
     } catch (error) {
       console.error("Error:", error);
       alert("Server Error");
@@ -112,20 +231,14 @@ export default function CoordinatorSignup() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center p-6">
-    {/* // <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"> */}
+      {/* // <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"> */}
 
-      
-
-   
       <div className="bg-white/20 backdrop-blur-2xl shadow-2xl rounded-3xl w-full max-w-4xl p-10 border border-white/30">
-
-      
         <h2 className="text-4xl font-bold text-center text-white mb-8">
           Coordinator Registration 👑
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-
           {/* Coordinator ID */}
           <div>
             <label className="block text-white text-sm mb-1">
@@ -141,13 +254,13 @@ export default function CoordinatorSignup() {
 
           {/* Basic Info */}
           <div className="grid md:grid-cols-2 gap-6">
-
             <div>
               <label className="text-white text-sm">Full Name</label>
               <input
                 type="text"
                 name="name"
                 placeholder="Enter your name"
+                value={form.name}
                 className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
                 onChange={handleChange}
                 required
@@ -160,12 +273,12 @@ export default function CoordinatorSignup() {
                 type="email"
                 name="email"
                 placeholder="Enter your email"
+                value={form.email}
                 className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
                 onChange={handleChange}
                 required
               />
             </div>
-
           </div>
 
           {/* Mobile */}
@@ -175,23 +288,65 @@ export default function CoordinatorSignup() {
               type="text"
               name="mobile"
               placeholder="Enter mobile number"
+              value={form.mobile}
               className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
               onChange={handleChange}
               required
             />
           </div>
 
-          {/* City */}
+          {/* 🔥 PINCODE + CITY */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="text-white text-sm">Pincode</label>
+              <input
+                type="text"
+                name="pincode"
+                placeholder="Enter pincode"
+                value={form.pincode}
+                maxLength={6}
+                className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+                onChange={handlePincodeChange}
+                required
+              />
+              {loadingPincode && (
+                <p className="text-sm text-white mt-2">Fetching city/state...</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-white text-sm">District</label>
+              <input
+                type="text"
+                name="city"
+                placeholder="District auto-filled"
+                value={form.city}
+                className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          {/* 🔥 STATE DROPDOWN */}
           <div>
-            <label className="text-white text-sm">City / Area</label>
-            <input
-              type="text"
-              name="city"
-              placeholder="Enter your city"
-              className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+            <label className="text-white text-sm">State</label>
+            <select
+              name="state"
+              value={form.state}
+              className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white border border-white/40 focus:outline-none focus:ring-2 focus:ring-pink-400 appearance-none"
               onChange={handleChange}
               required
-            />
+            >
+              <option value="" className="text-black">
+                Select State
+              </option>
+              {states.map((state, index) => (
+                <option key={index} value={state} className="text-black">
+                  {state}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Qualification */}
@@ -201,6 +356,7 @@ export default function CoordinatorSignup() {
               type="text"
               name="qualification"
               placeholder="Enter your qualification"
+              value={form.qualification}
               className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
               onChange={handleChange}
               required
@@ -214,6 +370,7 @@ export default function CoordinatorSignup() {
               type="text"
               name="experience"
               placeholder="Example: 2 Years Teaching"
+              value={form.experience}
               className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
               onChange={handleChange}
             />
@@ -221,19 +378,21 @@ export default function CoordinatorSignup() {
 
           {/* Department */}
           <div>
-            <label className="text-white text-sm">Department</label>
+            <label className="text-white text-sm">Area Of Experience</label>
             <select
-              name="department"
-              value={form.department}
+              name="AreaOfExperience"
+              value={form.AreaOfExperience}
               className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white border border-white/40 focus:outline-none focus:ring-2 focus:ring-pink-400 appearance-none"
               onChange={handleChange}
               required
             >
-              <option value="" className="text-black">Select Department</option>
-              <option className="text-black">Education</option>
-              <option className="text-black">Event Management</option>
-              <option className="text-black">Social Media</option>
-              <option className="text-black">Technical</option>
+              <option value="" className="text-black">
+                Area Of Experience
+              </option>
+              <option value="Education" className="text-black">Education</option>
+              <option value="Event Management" className="text-black">Event Management</option>
+              <option value="Social Media" className="text-black">Social Media</option>
+              <option value="Technical" className="text-black">Technical</option>
             </select>
           </div>
 
@@ -248,11 +407,9 @@ export default function CoordinatorSignup() {
               required
             >
               <option value="" className="text-black">Select Role</option>
-              <option className="text-black">Junior Coordinator</option>
-              <option className="text-black">Senior Coordinator</option>
-              <option className="text-black">District Coordinator</option>
-              <option className="text-black">State Coordinator</option>
-              <option className="text-black">National Coordinator</option>
+              <option value="Village Coordinator" className="text-black">
+                Village Coordinator
+              </option>
             </select>
           </div>
 
@@ -275,6 +432,7 @@ export default function CoordinatorSignup() {
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Enter password"
+              value={form.password}
               className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
               onChange={handleChange}
               required
@@ -288,11 +446,13 @@ export default function CoordinatorSignup() {
               type="password"
               name="confirmPassword"
               placeholder="Confirm password"
+              value={form.confirmPassword}
               className="w-full mt-1 p-3 rounded-xl bg-white/30 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-pink-400"
               onChange={handleChange}
               required
             />
           </div>
+
           <div className="md:col-span-2 flex items-start gap-2">
             <input
               type="checkbox"
@@ -313,16 +473,8 @@ export default function CoordinatorSignup() {
           >
             Register as Coordinator 👑
           </button>
-
         </form>
       </div>
-      
-           
-     </div>
-
-     
-    
-    
+    </div>
   );
 }
-

@@ -1,112 +1,130 @@
-import React, { useState } from "react";
-// import axios from "axios";
+
+
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function SchoolManagement() {
 
   const [search, setSearch] = useState("");
+  const [schools, setSchools] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [taskModal, setTaskModal] = useState(false);
+  const [currentSchool, setCurrentSchool] = useState(null);
+  const [customTask, setCustomTask] = useState("");
 
-  const [schools, setSchools] = useState([
-    {
-      id: "SCH-2401",
-      name: "Green Valley School",
-      email: "green@gmail.com",
-      status: "Pending",
-      blocked: false,
-      task: "None",
-      credits: 10,
-      phone: "9876543210",
-      city: "Delhi",
-      students: 120
-    },
-    {
-      id: "SCH-2402",
-      name: "Sunrise Public School",
-      email: "sunrise@gmail.com",
-      status: "Approved",
-      blocked: false,
-      task: "Olympiad Registration",
-      credits: 25,
-      phone: "9876501234",
-      city: "Lucknow",
-      students: 200
+  const taskList = [
+    "Collect student data",
+    "Upload school documents",
+    "Verify registrations",
+    "Promote Olympiad",
+    "Coordinate with students",
+    "Prepare daily report"
+  ];
+
+  // ================= FETCH =================
+  useEffect(() => {
+    fetchSchools();
+  }, []);
+
+  const fetchSchools = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/schools`);
+      setSchools(res.data.data || []);
+    } catch (err) {
+      console.error(err);
     }
-  ]);
-
-  // Approve
-  const approveSchool = (id) => {
-    setSchools(schools.map(s =>
-      s.id === id ? { ...s, status: "Approved" } : s
-    ));
   };
 
-  // Reject
-  const rejectSchool = (id) => {
-    setSchools(schools.map(s =>
-      s.id === id ? { ...s, status: "Rejected" } : s
-    ));
+  // ================= ASSIGN TASK =================
+  const assignTask = async (task) => {
+    if (!currentSchool) return;
+
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/admin/assign-school-task`, {
+        schoolId: currentSchool.schoolId,
+        task
+      });
+
+      alert("Task Assigned ✅");
+      setTaskModal(false);
+      setCustomTask("");
+      fetchSchools();
+
+    } catch (err) {
+      alert("Error assigning task ❌");
+    }
   };
 
-  // Block / Unblock
-  const toggleBlock = (id) => {
-    setSchools(schools.map(s =>
-      s.id === id ? { ...s, blocked: !s.blocked } : s
-    ));
-  };
-
-  // Assign task
-  const assignTask = (id) => {
-    const task = prompt("Enter Task");
-    if (!task) return;
-
-    setSchools(schools.map(s =>
-      s.id === id ? { ...s, task } : s
-    ));
-  };
-
-  // Add credit
-  const addCredit = (id) => {
+  // ================= ADD CREDIT =================
+  const addCredit = async (id) => {
     const points = parseInt(prompt("Enter Credit Points"));
-    if (!points) return;
+    if (!points || points <= 0) return alert("Invalid points");
 
-    setSchools(schools.map(s =>
-      s.id === id ? { ...s, credits: s.credits + points } : s
-    ));
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/admin/add-school-credits`, {
+        schoolId: id,
+        credits: points
+      });
+
+      alert("Credits Added ✅");
+      fetchSchools();
+
+    } catch (err) {
+      alert("Error ❌");
+    }
+  };
+
+  // ================= REMOVE CREDIT =================
+  const removeCredit = async (id) => {
+    const points = parseInt(prompt("Enter Credit Points to Deduct"));
+    if (!points || points <= 0) return alert("Invalid points");
+
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/admin/remove-school-credits`, {
+        schoolId: id,
+        credits: points
+      });
+
+      alert("Credits Deducted ✅");
+      fetchSchools();
+
+    } catch (err) {
+      alert("Error ❌");
+    }
   };
 
   const filtered = schools.filter(s =>
-    s.name.toLowerCase().includes(search.toLowerCase())
+    s.name?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] p-6 text-white">
 
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-8">
-
-      <h1 className="text-3xl font-bold mb-8">
-        School Management Dashboard
+      {/* HEADER */}
+      <h1 className="text-3xl font-extrabold mb-6 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+        🏫 School Management Dashboard
       </h1>
 
-      {/* Search */}
+      {/* SEARCH */}
       <input
         type="text"
-        placeholder="Search School..."
-        className="w-full p-3 border rounded-lg mb-6 shadow"
+        placeholder="🔍 Search School..."
+        className="w-full p-3 rounded-xl bg-white/10 border border-white/20 mb-6"
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* Table */}
+      {/* TABLE */}
+      <div className="bg-white/10 border border-white/20 rounded-2xl overflow-x-auto">
 
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <table className="w-full text-center min-w-[800px]">
 
-        <table className="w-full text-center">
-
-          <thead className="bg-indigo-500 text-white">
+          <thead className="bg-purple-600">
             <tr>
               <th className="p-3">ID</th>
-              <th>School Name</th>
+              <th>Name</th>
+                <th>Type</th> 
               <th>Email</th>
               <th>Students</th>
-              <th>Status</th>
               <th>Task</th>
               <th>Credits</th>
               <th>Actions</th>
@@ -117,90 +135,46 @@ export default function SchoolManagement() {
 
             {filtered.map(s => (
 
-              <tr key={s.id} className="border-t hover:bg-gray-50">
+              <tr key={s.schoolId} className="border-t border-white/10 hover:bg-white/10">
 
-                <td className="p-3">{s.id}</td>
+                <td className="p-3">{s.schoolId}</td>
                 <td>{s.name}</td>
+                <td>{s.type}</td>
                 <td>{s.email}</td>
                 <td>{s.students}</td>
+                <td>{s.task || "No Task"}</td>
 
-                <td>
-
-                  {s.status === "Approved" && (
-                    <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">
-                      Approved
-                    </span>
-                  )}
-
-                  {s.status === "Pending" && (
-                    <span className="bg-orange-200 text-orange-700 px-3 py-1 rounded-full text-sm">
-                      Pending
-                    </span>
-                  )}
-
-                  {s.status === "Rejected" && (
-                    <span className="bg-red-200 text-red-700 px-3 py-1 rounded-full text-sm">
-                      Rejected
-                    </span>
-                  )}
-
+                <td className="text-yellow-300 font-bold">
+                  ⭐ {s.credits || 0}
                 </td>
 
-                <td>{s.task}</td>
+                <td className="flex gap-2 flex-wrap justify-center p-2">
 
-                <td className="font-bold text-purple-600">
-                  ⭐ {s.credits}
-                </td>
-
-                <td className="flex gap-2 justify-center flex-wrap p-2">
+                  <button onClick={() => setSelected(s)} className="btn">View</button>
 
                   <button
-                    onClick={() => setSelected(s)}
-                    className="bg-gray-700 text-white px-3 py-1 rounded"
+                    onClick={() => addCredit(s.schoolId)}
+                    className="btn green"
                   >
-                    View
+                    +Credit
                   </button>
 
                   <button
-                    onClick={() => approveSchool(s.id)}
-                    className="bg-green-500 text-white px-3 py-1 rounded"
+                    onClick={() => removeCredit(s.schoolId)}
+                    className="btn red"
                   >
-                    Approve
+                    -Credit
                   </button>
 
                   <button
-                    onClick={() => rejectSchool(s.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                  >
-                    Reject
-                  </button>
-
-                  <button
-                    onClick={() => assignTask(s.id)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                    onClick={() => {
+                      setCurrentSchool(s);
+                      setTaskModal(true);
+                    }}
+                    className="btn blue"
                   >
                     Task
                   </button>
-
-                  <button
-                    onClick={() => addCredit(s.id)}
-                    className="bg-purple-500 text-white px-3 py-1 rounded"
-                  >
-                    Credit +
-                  </button>
-
-                  {s.status === "Approved" && (
-
-                    <button
-                      onClick={() => toggleBlock(s.id)}
-                      className={`px-3 py-1 rounded text-white ${
-                        s.blocked ? "bg-yellow-500" : "bg-black"
-                      }`}
-                    >
-                      {s.blocked ? "Unblock" : "Block"}
-                    </button>
-
-                  )}
 
                 </td>
 
@@ -211,33 +185,74 @@ export default function SchoolManagement() {
           </tbody>
 
         </table>
-
       </div>
 
       {/* PROFILE MODAL */}
-
       {selected && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+          <div className="bg-white text-black p-6 rounded-2xl w-96">
+            <h2 className="text-xl font-bold mb-4">School Profile</h2>
 
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-
-          <div className="bg-white p-6 rounded-xl w-96">
-
-            <h2 className="text-2xl font-bold mb-4">
-              School Profile
-            </h2>
-
-            <p><b>ID:</b> {selected.id}</p>
-            <p><b>School:</b> {selected.name}</p>
+            <p><b>ID:</b> {selected.schoolId}</p>
+            <p><b>Name:</b> {selected.name}</p>
+            <p><b>Type:</b> {selected.type}</p>
             <p><b>Email:</b> {selected.email}</p>
             <p><b>Phone:</b> {selected.phone}</p>
             <p><b>City:</b> {selected.city}</p>
-            <p><b>Total Students:</b> {selected.students}</p>
+            <p><b>Students:</b> {selected.students}</p>
             <p><b>Task:</b> {selected.task}</p>
             <p><b>Credits:</b> ⭐ {selected.credits}</p>
 
             <button
               onClick={() => setSelected(null)}
-              className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded"
+              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* TASK MODAL */}
+      {taskModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
+
+          <div className="bg-white text-black w-[400px] p-6 rounded-2xl">
+
+            <h2 className="text-xl font-bold mb-4">Assign Task</h2>
+
+            <div className="flex gap-2 mb-4">
+              <input
+                type="text"
+                placeholder="Custom task..."
+                value={customTask}
+                onChange={(e) => setCustomTask(e.target.value)}
+                className="flex-1 p-2 border rounded"
+              />
+              <button
+                onClick={() => {
+                  if (!customTask.trim()) return alert("Enter task");
+                  assignTask(customTask);
+                }}
+                className="bg-green-500 text-white px-3 rounded"
+              >
+                Add
+              </button>
+            </div>
+
+            {taskList.map((t, i) => (
+              <button
+                key={i}
+                onClick={() => assignTask(t)}
+                className="block w-full text-left p-2 bg-gray-100 mb-2 rounded"
+              >
+                • {t}
+              </button>
+            ))}
+
+            <button
+              onClick={() => setTaskModal(false)}
+              className="mt-4 w-full bg-red-500 text-white py-2 rounded"
             >
               Close
             </button>
@@ -245,8 +260,25 @@ export default function SchoolManagement() {
           </div>
 
         </div>
-
       )}
+
+      {/* BUTTON STYLE */}
+      <style>{`
+        .btn {
+          padding: 6px 10px;
+          border-radius: 8px;
+          font-size: 12px;
+          background: rgba(255,255,255,0.1);
+          transition: 0.3s;
+        }
+        .btn:hover {
+          transform: scale(1.1);
+        }
+
+        .green { background: linear-gradient(to right, #00c853, #64dd17); }
+        .red { background: linear-gradient(to right, #d50000, #ff1744); }
+        .blue { background: linear-gradient(to right, #2196f3, #21cbf3); }
+      `}</style>
 
     </div>
   );

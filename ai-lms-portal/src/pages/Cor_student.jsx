@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -9,15 +13,14 @@ export default function Cor_student() {
 
     const referralCode = localStorage.getItem("CoordinatorReferralCode");
     console.log("referralCode from localStorage:", referralCode);
-    
 
-    if(!referralCode){
+    if (!referralCode) {
       console.log("Referral Code Not Found");
       return;
     }
 
     axios
-      .get(`http://localhost:5000/coordinator/referrals/${referralCode}`)
+      .get(`${import.meta.env.VITE_API_URL}/coordinator/referrals/${referralCode}`)
       .then((res) => {
         console.log("Students Fetched:", res.data);
         setStudents(res.data);
@@ -29,27 +32,45 @@ export default function Cor_student() {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen p-6 text-white relative overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg,#07111f,#0b1f36,#102944)"
+      }}
+    >
 
-      <h2 className="text-2xl font-bold mb-6">
-        My Referred Students
+      {/* 🌈 Glow Effects */}
+      <div style={glow1}></div>
+      <div style={glow2}></div>
+
+      <h2 className="text-3xl font-bold mb-8 text-center"
+        style={{
+          background: "linear-gradient(90deg,#00f5ff,#ff00c8)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent"
+        }}
+      >
+        🎓 My Referred Students
       </h2>
 
-      <div className="bg-white shadow rounded-lg p-4">
+      <div className="rounded-2xl p-6 overflow-x-auto"
+        style={glassStyle}
+      >
 
-        <table className="w-full border">
+        <table className="w-full text-center min-w-[900px]">
 
-          <thead className="bg-gray-100">
-
+          <thead style={{
+            background: "rgba(255,255,255,0.1)"
+          }}>
             <tr>
-              <th className="p-3 text-left">Student Name</th>
-              <th className="p-3 text-left">Class</th>
-              <th className="p-3 text-left">Subject</th>
-              <th className="p-3 text-left">School</th>
-              <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">Status</th>
+              {/* ✅ SR NO */}
+              <th className="p-3">Sr No</th>
+              <th className="p-3">Student Name</th>
+              <th className="p-3">Class</th>
+              <th className="p-3">Subject</th>
+              <th className="p-3">School</th>
+              <th className="p-3">Email</th>
+              <th className="p-3">Status</th>
             </tr>
-
           </thead>
 
           <tbody>
@@ -57,23 +78,45 @@ export default function Cor_student() {
             {students.length === 0 ? (
 
               <tr>
-                <td colSpan="6" className="text-center p-4">
+                <td colSpan="7" className="text-center p-6 text-gray-400">
                   No Students Found
                 </td>
               </tr>
 
             ) : (
 
-              students.map((s,i)=>(
-                <tr key={i} className="border-t">
+              students.map((s, i) => (
+                <tr key={i}
+                  style={rowStyle(i)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.01)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                >
+
+                  {/* ✅ SR NO */}
+                  <td className="p-3 text-cyan-300 font-bold">
+                    {i + 1}
+                  </td>
 
                   <td className="p-3">{s.student_name}</td>
                   <td className="p-3">{s.class}</td>
                   <td className="p-3">{s.subject}</td>
                   <td className="p-3">{s.school_name}</td>
                   <td className="p-3">{s.email}</td>
-                  <td className="p-3 text-green-600 font-semibold">
-                    Registered
+
+                  <td
+                    className={`p-3 font-semibold ${
+                      s.payment_status?.toLowerCase() === "success"
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {s.payment_status?.toLowerCase() === "success"
+                      ? "Paid"
+                      : "Pending"}
                   </td>
 
                 </tr>
@@ -87,6 +130,60 @@ export default function Cor_student() {
 
       </div>
 
+      {/* 🎨 Animations */}
+      <style>{`
+        @keyframes floatOne {
+          0%,100%{transform:translateY(0)}
+          50%{transform:translateY(20px)}
+        }
+        @keyframes floatTwo {
+          0%,100%{transform:translateY(0)}
+          50%{transform:translateY(-20px)}
+        }
+      `}</style>
+
     </div>
   );
 }
+
+
+// 🎨 STYLES
+
+const glassStyle = {
+  background: "rgba(255,255,255,0.08)",
+  backdropFilter: "blur(16px)",
+  border: "1px solid rgba(255,255,255,0.12)",
+  boxShadow: "0 20px 40px rgba(0,0,0,0.25)"
+};
+
+const rowStyle = (i) => ({
+  background: i % 2 === 0
+    ? "rgba(255,255,255,0.03)"
+    : "transparent",
+  borderBottom: "1px solid rgba(255,255,255,0.08)",
+  transition: "all 0.3s ease"
+});
+
+const glow1 = {
+  position: "absolute",
+  width: "300px",
+  height: "300px",
+  background: "rgba(0,255,255,0.15)",
+  borderRadius: "50%",
+  filter: "blur(120px)",
+  top: "-80px",
+  left: "-50px",
+  animation: "floatOne 6s infinite"
+};
+
+const glow2 = {
+  position: "absolute",
+  width: "300px",
+  height: "300px",
+  background: "rgba(255,0,150,0.15)",
+  borderRadius: "50%",
+  filter: "blur(120px)",
+  bottom: "-80px",
+  right: "-50px",
+  animation: "floatTwo 7s infinite"
+};

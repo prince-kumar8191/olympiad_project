@@ -9,14 +9,15 @@ export default function App() {
 
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showAwards, setShowAwards] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState("English");
- const isLoggedIn = localStorage.getItem("isLoggedIn");
-const role = localStorage.getItem("role");
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const role = localStorage.getItem("role");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-const isCoordinator = localStorage.getItem("coordinatorLogin");
+  const isCoordinator = localStorage.getItem("coordinatorLogin");
 
   const languages = [
     "English", "Hindi", "Bengali", "Telugu", "Marathi", "Tamil", "Urdu",
@@ -34,11 +35,12 @@ const isCoordinator = localStorage.getItem("coordinatorLogin");
 
 
 
-
+  const goToOlympiads = () => navigate("/olympiads");
   const goToLogin = () => navigate("/login");
   const goToSignup = () => navigate("/signup");
   const goToRegister = () => navigate("signup/student_signup");
   const goToScholarship = () => navigate("/scholarship");
+  const goToPrivacyPolicy = () => navigate("/Privacy_Policy");
 
   // ✅ ADDED
   const goToAbout = () => navigate("/about");
@@ -49,194 +51,256 @@ const isCoordinator = localStorage.getItem("coordinatorLogin");
 
       {/* NAVBAR */}
 
-<nav className="bg-white/70 dark:bg-gray-800 backdrop-blur-lg shadow-md sticky top-0 z-[999] relative">
-  <div className="flex justify-between items-center px-6 md:px-10 py-4">
+      <nav className="bg-white/70 dark:bg-gray-800 backdrop-blur-lg shadow-md sticky top-0 z-[999] relative">
+        <div className="flex justify-between items-center px-6 md:px-10 py-4">
 
-    {/* 🔥 LOGO + NAME */}
-    <div className="flex items-center gap-3">
-      <img
-        src={logo}
-        alt="Bhayat Logo"
-        className="h-12 w-auto object-contain scale-[3.0] origin-left"
-      />
-    </div>
+          {/* 🔥 LOGO + NAME */}
+          <div className="flex items-center gap-3">
+            <img
+              src={logo}
+              alt="Bhayat Logo"
+              className="h-12 w-auto object-contain scale-[3.0] origin-left"
+            />
+          </div>
 
-    {/* RIGHT SIDE MENU */}
-    <div className="hidden md:flex items-center gap-6 font-semibold"></div>
+          {/* RIGHT SIDE MENU */}
+          <div className="hidden md:flex items-center gap-6 font-semibold"></div>
 
-    <div className="hidden md:flex items-center gap-6 font-semibold">
-      <a className="hover:text-indigo-600 cursor-pointer">Home</a>
+          <div className="hidden md:flex items-center gap-6 font-semibold">
+            <a className="hover:text-indigo-600 cursor-pointer">Home</a>
 
-      {/* ✅ UPDATED */}
-      <a onClick={goToAbout} className="hover:text-indigo-600 cursor-pointer">
-        About
-      </a>
+            {/* ✅ UPDATED */}
+            <a onClick={goToAbout} className="hover:text-indigo-600 cursor-pointer">
+              About
+            </a>
 
-      <a className="hover:text-indigo-600 cursor-pointer">Olympiads</a>
 
-      {/* ✅ NEW OPTION */}
-      <a onClick={goToScholarship} className="hover:text-indigo-600 cursor-pointer">
-        Scholarship
-      </a>
+            <div className="relative">
+              <button
+                onClick={() => setShowAwards(!showAwards)}
+                className="hover:text-indigo-600 cursor-pointer"
+              >
+                Awards
+              </button>
 
-     {isLoggedIn ? (
-        <div className="flex items-center gap-4">
+              {showAwards && (
+                <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-3 w-48 z-50">
+                  <button
+                    onClick={() => {
+                      navigate("/Student_Award");
+                      setShowAwards(false);
+                    }}
+                    className="block w-full text-left py-2 hover:text-indigo-600"
+                  >
+                    Student  Awards and Recognition
+                  </button>
 
-          <span>👤 {user.name || role}</span>
+                  <button
+                    onClick={() => {
+                      navigate("/School_Award");
+                      setShowAwards(false);
+                    }}
+                    className="block w-full text-left py-2 hover:text-indigo-600"
+                  >
+                    School  Awards and Recognition
+                  </button>
+                </div>
+              )}
 
-          {/* 🔥 ROLE DASHBOARD */}
-          {role === "student" && (
-            <button onClick={() => navigate("/Student_Dashboard")} className="btn">
-              📊 Dashboard
+            </div>
+            <a
+              onClick={() => navigate("/Criteria")}
+              className="hover:text-indigo-600 cursor-pointer"
+            >
+              Criteria
+            </a>
+
+            <a
+              onClick={() => navigate("/Olympiads")}
+              className="hover:text-indigo-600 cursor-pointer">Olympiads</a>
+
+            {/* ✅ NEW OPTION */}
+            <a onClick={goToScholarship} className="hover:text-indigo-600 cursor-pointer">
+              Scholarship
+            </a>
+
+            {isLoggedIn ? (
+              <div className="flex items-center gap-4">
+
+                <span>👤 {user.name || role}</span>
+
+                {/* 🔥 ROLE DASHBOARD */}
+                {role === "student" && (
+                  <button onClick={() => navigate("/Student_Dashboard")} className="btn">
+                    📊 Dashboard
+                  </button>
+                )}
+
+                {role === "coordinator" && (
+                  <button onClick={() => navigate("/Coordinator_Dashboard")} className="btn">
+                    📊 Dashboard
+                  </button>
+                )}
+
+                {role === "volunteer" && (
+                  <button onClick={() => navigate("/Volunteer_Dashboard")} className="btn">
+                    📊 Dashboard
+                  </button>
+                )}
+
+                {role === "school" && (
+                  <button onClick={() => navigate("/School_Dashboard")} className="btn">
+                    📊 Dashboard
+                  </button>
+                )}
+
+                {/* LOGOUT */}
+                <button
+                  onClick={() => {
+                    localStorage.clear();
+                    navigate("/login");
+                  }}
+                  className="border-2 border-red-500 text-red-500 px-5 py-2 rounded-full hover:bg-red-500 hover:text-white transition"
+                >
+                  Logout
+                </button>
+
+              </div>
+            ) : (
+              <>
+                <button onClick={goToLogin} className="btn">Login</button>
+                <button onClick={goToSignup} className="btn-primary">Sign Up</button>
+              </>
+            )}
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="text-2xl hover:rotate-90 transition"
+            >
+              ⚙️
             </button>
-          )}
+          </div>
 
-          {role === "coordinator" && (
-            <button onClick={() => navigate("/Coordinator_Dashboard")} className="btn">
-              📊 Dashboard
-            </button>
-          )}
-
-          {role === "volunteer" && (
-            <button onClick={() => navigate("/Volunteer_Dashboard")} className="btn">
-              📊 Dashboard
-            </button>
-          )}
-
-          {role === "school" && (
-            <button onClick={() => navigate("/School_Dashboard")} className="btn">
-              📊 Dashboard
-            </button>
-          )}
-
-          {/* LOGOUT */}
           <button
-            onClick={() => {
-              localStorage.clear();
-              navigate("/login");
-            }}
-            className="border-2 border-red-500 text-red-500 px-5 py-2 rounded-full hover:bg-red-500 hover:text-white transition"
+            className="md:hidden text-3xl"
+            onClick={() => setMenuOpen(!menuOpen)}
           >
-            Logout
+            ☰
           </button>
-
         </div>
-      ) : (
-        <>
-          <button onClick={goToLogin} className="btn">Login</button>
-          <button onClick={goToSignup} className="btn-primary">Sign Up</button>
-        </>
-      )}
-      <button
-        onClick={() => setShowSettings(!showSettings)}
-        className="text-2xl hover:rotate-90 transition"
-      >
-        ⚙️
-      </button>
-    </div>
 
-    <button
-      className="md:hidden text-3xl"
-      onClick={() => setMenuOpen(!menuOpen)}
-    >
-      ☰
-    </button>
-  </div>
+        {menuOpen && (
+          <div className="md:hidden flex flex-col gap-4 px-6 pb-6 font-semibold bg-white dark:bg-gray-800">
+            <a>Home</a>
+            <a>Olympiads</a>
+            <a onClick={goToScholarship}>Scholarship</a>
+            <a onClick={goToAbout}>About</a>
+            <div>
+              <button onClick={() => setShowAwards(!showAwards)}>
+                Awards
+              </button>
 
-  {menuOpen && (
-    <div className="md:hidden flex flex-col gap-4 px-6 pb-6 font-semibold bg-white dark:bg-gray-800">
-      <a>Home</a>
-      <a>Olympiads</a>
-      <a>Scholarship</a>
-      <a onClick={goToAbout}>About</a>
+              {showAwards && (
+                <div className="ml-4 flex flex-col gap-2">
+                  <button onClick={() => navigate("/Student_Award")}>
+                    Student  Awards and Recognition
+                  </button>
+                  <button onClick={() => navigate("/School_Award")}>
+                    School  Awards and Recognition
+                  </button>
+                </div>
+              )}
 
-    
-      {isLoggedIn ? (
-        <>
-          <span>👤 {user.name || role}</span>
+            </div>
+            <a onClick={() => navigate("/Criteria")}>
+              Criteria
+            </a>
 
-          {/* DASHBOARD */}
-          {role === "student" && (
-            <button onClick={() => navigate("/Student_Dashboard")}>Dashboard</button>
-          )}
+            {isLoggedIn ? (
+              <>
+                <span>👤 {user.name || role}</span>
 
-          {role === "coordinator" && (
-            <button onClick={() => navigate("/Coordinator_Dashboard")}>Dashboard</button>
-          )}
+                {/* DASHBOARD */}
+                {role === "student" && (
+                  <button onClick={() => navigate("/Student_Dashboard")}>Dashboard</button>
+                )}
 
-          {role === "volunteer" && (
-            <button onClick={() => navigate("/Volunteer_Dashboard")}>Dashboard</button>
-          )}
+                {role === "coordinator" && (
+                  <button onClick={() => navigate("/Coordinator_Dashboard")}>Dashboard</button>
+                )}
 
-          {role === "school" && (
-            <button onClick={() => navigate("/School_Dashboard")}>Dashboard</button>
-          )}
+                {role === "volunteer" && (
+                  <button onClick={() => navigate("/Volunteer_Dashboard")}>Dashboard</button>
+                )}
 
-          {/* LOGOUT */}
-          <button
-            onClick={() => {
-              localStorage.clear();
-              navigate("/login");
-            }}
-            className="text-red-500"
-          >
-            Logout
-          </button>
-        </>
-      ) : (
-        <>
-          <button onClick={goToLogin}>Login</button>
-          <button onClick={goToSignup}>Sign Up</button>
-        </>
-      )}
+                {role === "school" && (
+                  <button onClick={() => navigate("/School_Dashboard")}>Dashboard</button>
+                )}
 
-      <button
-        onClick={() => setShowSettings(!showSettings)}
-        className="py-2 border rounded bg-gray-100 dark:bg-gray-700"
-      >
-        ⚙️ Settings
-      </button>
-    </div>
-  )}
+                {/* LOGOUT */}
+                <button
+                  onClick={() => {
+                    localStorage.clear();
+                    navigate("/login");
+                  }}
+                  className="text-red-500"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={goToLogin}>Login</button>
+                <button onClick={goToSignup}>Sign Up</button>
+              </>
+            )}
 
-  {showSettings && (
-    <div className="absolute right-10 top-20 w-64 bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4 z-50">
-      <div className="flex justify-between items-center mb-3">
-        <span>Dark Mode</span>
-        <input
-          type="checkbox"
-          checked={darkMode}
-          onChange={() => setDarkMode(!darkMode)}
-        />
-      </div>
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="py-2 border rounded bg-gray-100 dark:bg-gray-700"
+            >
+              ⚙️ Settings
+            </button>
+          </div>
+        )}
 
-      <div className="mb-3">
-        <label className="block mb-1">Language</label>
-        <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          className="w-full border p-1 rounded"
-        >
-          {languages.map((lang) => (
-            <option key={lang}>{lang}</option>
-          ))}
-        </select>
-      </div>
+        {showSettings && (
+          <div className="absolute right-10 top-20 w-64 bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4 z-50">
+            <div className="flex justify-between items-center mb-3">
+              <span>Dark Mode</span>
+              <input
+                type="checkbox"
+                checked={darkMode}
+                onChange={() => setDarkMode(!darkMode)}
+              />
+            </div>
 
-      <hr className="my-2" />
+            <div className="mb-3">
+              <label className="block mb-1">Language</label>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="w-full border p-1 rounded"
+              >
+                {languages.map((lang) => (
+                  <option key={lang}>{lang}</option>
+                ))}
+              </select>
+            </div>
 
-      <button className="block w-full text-left py-1 hover:text-indigo-600">
-        Edit Profile
-      </button>
-      <button className="block w-full text-left py-1 hover:text-indigo-600">
-        Feedback
-      </button>
-      <button className="block w-full text-left py-1 hover:text-indigo-600">
-        Privacy & Policy
-      </button>
-    </div>
-  )}
-</nav>
+            <hr className="my-2" />
+
+
+            <button className="block w-full text-left py-1 hover:text-indigo-600">
+              Feedback
+            </button>
+            <button
+              onClick={() => navigate("/Privacy_Policy")}
+              className="block w-full text-left py-1 hover:text-indigo-600">
+              Privacy & Policy
+            </button>
+          </div>
+        )}
+      </nav>
 
 
       {/* HERO SECTION */}

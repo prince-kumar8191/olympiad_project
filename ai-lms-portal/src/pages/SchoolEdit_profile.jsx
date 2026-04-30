@@ -1,270 +1,3 @@
-// import React, { useState } from "react";
-
-// function SchoolEditProfile() {
-
-// const [logoPreview, setLogoPreview] = useState("https://via.placeholder.com/120");
-// const [facilityInput, setFacilityInput] = useState("");
-// const [facilities, setFacilities] = useState([]);
-
-// const handleLogoChange = (e) => {
-// const file = e.target.files[0];
-
-// if (file) {
-// const reader = new FileReader();
-
-// reader.onload = () => {
-// setLogoPreview(reader.result);
-// };
-
-// reader.readAsDataURL(file);
-// }
-// };
-
-// const addFacility = () => {
-
-// if (!facilityInput.trim()) return;
-
-// setFacilities([...facilities, facilityInput]);
-// setFacilityInput("");
-
-// };
-
-// const removeFacility = (index) => {
-// setFacilities(facilities.filter((_, i) => i !== index));
-// };
-
-// const handleSubmit = (e) => {
-// e.preventDefault();
-// alert("School Profile Saved");
-// };
-
-// return (
-
-// <div className="bg-gray-100 p-8 min-h-screen">
-
-// <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-xl p-8">
-
-// {/* HEADER */}
-
-// <div className="flex justify-between items-center mb-6">
-
-// <h1 className="text-3xl font-bold text-indigo-600">
-// Edit School Profile
-// </h1>
-
-// {/* LOGO */}
-
-// <div className="text-center">
-
-// <img
-// src={logoPreview}
-// alt="school logo"
-// className="w-28 h-28 rounded-full border object-cover"
-// />
-
-// <label className="block mt-2 text-indigo-600 cursor-pointer font-medium">
-
-// Upload Logo
-
-// <input
-// type="file"
-// onChange={handleLogoChange}
-// className="hidden"
-// />
-
-// </label>
-
-// </div>
-
-// </div>
-
-// <form onSubmit={handleSubmit} className="space-y-10">
-
-// {/* SCHOOL INFO */}
-
-// <div>
-
-// <h2 className="text-xl font-semibold mb-4 border-b pb-2">
-// School Information
-// </h2>
-
-// <div className="grid md:grid-cols-2 gap-4">
-
-// <div className="md:col-span-2">
-// <label className="font-medium">School Name*</label>
-// <input type="text" required className="border p-3 rounded w-full"/>
-// </div>
-
-// <div className="md:col-span-2">
-// <label className="font-medium">School Address*</label>
-// <textarea required className="border p-3 rounded w-full"/>
-// </div>
-
-// <input placeholder="School City*" className="border p-3 rounded w-full"/>
-
-// <input placeholder="School State*" className="border p-3 rounded w-full"/>
-
-// <input placeholder="School Country*" className="border p-3 rounded w-full"/>
-
-// <input placeholder="School Pincode*" className="border p-3 rounded w-full"/>
-
-// <input type="email" placeholder="School Email*" className="border p-3 rounded w-full"/>
-
-// <input placeholder="School Phone*" className="border p-3 rounded w-full"/>
-
-// <input placeholder="School Affiliation" className="border p-3 rounded w-full"/>
-
-// <input placeholder="School Code" className="border p-3 rounded w-full"/>
-
-// </div>
-
-// </div>
-
-// {/* PRINCIPAL */}
-
-// <div>
-
-// <h2 className="text-xl font-semibold mb-4">
-// Principal Information
-// </h2>
-
-// <div className="grid md:grid-cols-2 gap-4">
-
-// <input placeholder="Principal Name" className="border p-3 rounded"/>
-
-// <input placeholder="Principal Email" className="border p-3 rounded"/>
-
-// <input placeholder="Principal Phone" className="border p-3 rounded"/>
-
-// <input placeholder="Total Students" className="border p-3 rounded"/>
-
-// </div>
-
-// </div>
-
-// {/* CLASSES */}
-
-// <div>
-
-// <h2 className="text-xl font-semibold mb-4">
-// Classes Available
-// </h2>
-
-// <div className="grid grid-cols-3 gap-2">
-
-// {[
-// "Class 6","Class 7","Class 8",
-// "Class 9","Class 10","Class 11","Class 12"
-// ].map((cls,index)=>(
-// <label key={index}>
-// <input type="checkbox"/> {cls}
-// </label>
-// ))}
-
-// </div>
-
-// </div>
-
-// {/* FACILITIES */}
-
-// <div>
-
-// <h2 className="text-xl font-semibold mb-4">
-// Facilities
-// </h2>
-
-// <div className="flex gap-2">
-
-// <input
-// value={facilityInput}
-// onChange={(e)=>setFacilityInput(e.target.value)}
-// placeholder="Add Facility (Library, Lab...)"
-// className="border p-3 rounded w-full"
-// />
-
-// <button
-// type="button"
-// onClick={addFacility}
-// className="bg-indigo-600 text-white px-4 rounded"
-// >
-// Add
-// </button>
-
-// </div>
-
-// <div className="flex flex-wrap gap-2 mt-4">
-
-// {facilities.map((f,index)=>(
-// <div
-// key={index}
-// className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded flex items-center gap-2"
-// >
-// {f}
-
-// <span
-// onClick={()=>removeFacility(index)}
-// className="cursor-pointer text-red-500"
-// >
-// x
-// </span>
-
-// </div>
-// ))}
-
-// </div>
-
-// </div>
-
-// {/* CONTACT */}
-
-// <div>
-
-// <h2 className="text-xl font-semibold mb-4">
-// Contact Information
-// </h2>
-
-// <div className="grid md:grid-cols-2 gap-4">
-
-// <input placeholder="School Phone" className="border p-3 rounded"/>
-
-// <input placeholder="School Email" className="border p-3 rounded"/>
-
-// <input placeholder="Website" className="border p-3 rounded"/>
-
-// <input placeholder="City" className="border p-3 rounded"/>
-
-// <input placeholder="State" className="border p-3 rounded"/>
-
-// <input placeholder="Pincode" className="border p-3 rounded"/>
-
-// </div>
-
-// </div>
-
-// <button
-// type="submit"
-// className="w-full bg-indigo-600 text-white py-3 rounded-lg text-lg hover:bg-indigo-700"
-// >
-// Save School Profile
-// </button>
-
-// </form>
-
-// </div>
-
-// </div>
-
-// );
-// }
-
-// export default SchoolEditProfile;
-
-
-
-
-
-
-
 
 
 
@@ -280,9 +13,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-
 import { useNavigate } from "react-router-dom";
-
 
 function SchoolEditProfile() {
 
@@ -316,9 +47,6 @@ function SchoolEditProfile() {
     contact_state: "",
     contact_pincode: ""
   });
-
-
-
 
 useEffect(() => {
 
@@ -364,8 +92,6 @@ useEffect(() => {
   }
 
 }, [location.state]);
-
-
 
   const handleChange = (e) => {
     setForm({
@@ -415,9 +141,6 @@ useEffect(() => {
 
   };
 
-
-
-
 const handleSubmit = async (e) => {
 
   e.preventDefault();
@@ -448,7 +171,7 @@ const handleSubmit = async (e) => {
     console.log("Sending Data:", data);
 
     const res = await axios.post(
-      "http://localhost:5000/school/edit-profile",
+      `${import.meta.env.VITE_API_URL}/school/edit-profile`,
       data
     );
 
@@ -467,16 +190,15 @@ const handleSubmit = async (e) => {
 
 };
 
-
   return (
 
-    <div className="bg-gradient-to-br from-indigo-100 via-white to-purple-100 p-8 min-h-screen">
+    <div className="mainBg p-8 min-h-screen">
 
-      <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
+      <div className="max-w-6xl mx-auto glassCard p-10">
 
         <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
 
-          <h1 className="text-4xl font-bold text-indigo-600">
+          <h1 className="titleText">
             Edit School Profile
           </h1>
 
@@ -485,10 +207,10 @@ const handleSubmit = async (e) => {
             <img
               src={logoPreview}
               alt="school logo"
-              className="w-32 h-32 rounded-full border-4 border-indigo-500 shadow-lg object-cover"
+              className="logoImg"
             />
 
-            <label className="block mt-3 text-indigo-600 cursor-pointer font-semibold hover:underline">
+            <label className="uploadBtn">
 
               Upload Logo
 
@@ -506,74 +228,40 @@ const handleSubmit = async (e) => {
 
         <form onSubmit={handleSubmit} className="space-y-10">
 
-          {/* SCHOOL INFO */}
-
-          <div className="bg-gray-50 p-6 rounded-xl shadow">
-
-            <h2 className="text-2xl font-semibold mb-5 border-b pb-2 text-indigo-600">
-              School Information
-            </h2>
+          <div className="glassInner">
+            <h2 className="sectionTitle">School Information</h2>
 
             <div className="grid md:grid-cols-2 gap-4">
-
-              <input name="school_name" value={form.school_name} onChange={handleChange} placeholder="School Name" className="border p-3 rounded-lg" />
-
-              <textarea name="school_address" value={form.school_address} onChange={handleChange} placeholder="School Address" className="border p-3 rounded-lg" />
-
-              <input name="city" value={form.city} onChange={handleChange} placeholder="City" className="border p-3 rounded-lg" />
-
-              <input name="state" value={form.state} onChange={handleChange} placeholder="State" className="border p-3 rounded-lg" />
-
-              <input name="country" value={form.country} onChange={handleChange} placeholder="Country" className="border p-3 rounded-lg" />
-
-              <input name="pincode" value={form.pincode} onChange={handleChange} placeholder="Pincode" className="border p-3 rounded-lg" />
-
-              <input name="school_email" value={form.school_email} onChange={handleChange} placeholder="School Email" className="border p-3 rounded-lg" />
-
-              <input name="school_phone" value={form.school_phone} onChange={handleChange} placeholder="School Phone" className="border p-3 rounded-lg" />
-
-              <input name="affiliation" value={form.affiliation} onChange={handleChange} placeholder="Affiliation" className="border p-3 rounded-lg" />
-
-              <input name="school_code" value={form.school_code} onChange={handleChange} placeholder="School Code" className="border p-3 rounded-lg" />
-
+              <input name="school_name" value={form.school_name} onChange={handleChange} placeholder="School Name" className="inputStyle"/>
+              <textarea name="school_address" value={form.school_address} onChange={handleChange} placeholder="School Address" className="inputStyle"/>
+              <input name="city" value={form.city} onChange={handleChange} placeholder="City" className="inputStyle"/>
+              <input name="state" value={form.state} onChange={handleChange} placeholder="State" className="inputStyle"/>
+              <input name="country" value={form.country} onChange={handleChange} placeholder="Country" className="inputStyle"/>
+              <input name="pincode" value={form.pincode} onChange={handleChange} placeholder="Pincode" className="inputStyle"/>
+              <input name="school_email" value={form.school_email} onChange={handleChange} placeholder="School Email" className="inputStyle"/>
+              <input name="school_phone" value={form.school_phone} onChange={handleChange} placeholder="School Phone" className="inputStyle"/>
+              <input name="affiliation" value={form.affiliation} onChange={handleChange} placeholder="Affiliation" className="inputStyle"/>
+              <input name="school_code" value={form.school_code} onChange={handleChange} placeholder="School Code" className="inputStyle"/>
             </div>
-
           </div>
 
-          {/* PRINCIPAL */}
-
-          <div className="bg-gray-50 p-6 rounded-xl shadow">
-
-            <h2 className="text-2xl font-semibold mb-5 text-indigo-600">
-              Principal Information
-            </h2>
+          <div className="glassInner">
+            <h2 className="sectionTitle">Principal Information</h2>
 
             <div className="grid md:grid-cols-2 gap-4">
-
-              <input name="principal_name" value={form.principal_name} onChange={handleChange} placeholder="Principal Name" className="border p-3 rounded-lg" />
-
-              <input name="principal_email" value={form.principal_email} onChange={handleChange} placeholder="Principal Email" className="border p-3 rounded-lg" />
-
-              <input name="principal_phone" value={form.principal_phone} onChange={handleChange} placeholder="Principal Phone" className="border p-3 rounded-lg" />
-
-              <input name="total_students" value={form.total_students} onChange={handleChange} placeholder="Total Students" className="border p-3 rounded-lg" />
-
+              <input name="principal_name" value={form.principal_name} onChange={handleChange} placeholder="Principal Name" className="inputStyle"/>
+              <input name="principal_email" value={form.principal_email} onChange={handleChange} placeholder="Principal Email" className="inputStyle"/>
+              <input name="principal_phone" value={form.principal_phone} onChange={handleChange} placeholder="Principal Phone" className="inputStyle"/>
+              <input name="total_students" value={form.total_students} onChange={handleChange} placeholder="Total Students" className="inputStyle"/>
             </div>
-
           </div>
 
-          {/* CLASSES */}
-
-          <div className="bg-gray-50 p-6 rounded-xl shadow">
-
-            <h2 className="text-2xl font-semibold mb-5 text-indigo-600">
-              Classes Available
-            </h2>
+          <div className="glassInner">
+            <h2 className="sectionTitle">Classes Available</h2>
 
             <div className="grid grid-cols-3 gap-3">
-
               {["Class 6","Class 7","Class 8","Class 9","Class 10","Class 11","Class 12"].map((cls,index)=>(
-                <label key={index} className="flex items-center gap-2">
+                <label key={index} className="checkboxLabel">
                   <input
                     type="checkbox"
                     checked={classes.includes(cls)}
@@ -582,85 +270,55 @@ const handleSubmit = async (e) => {
                   {cls}
                 </label>
               ))}
-
             </div>
-
           </div>
 
-          {/* FACILITIES */}
-
-          <div className="bg-gray-50 p-6 rounded-xl shadow">
-
-            <h2 className="text-2xl font-semibold mb-5 text-indigo-600">
-              Facilities
-            </h2>
+          <div className="glassInner">
+            <h2 className="sectionTitle">Facilities</h2>
 
             <div className="flex gap-2">
-
               <input
                 value={facilityInput}
                 onChange={(e)=>setFacilityInput(e.target.value)}
                 placeholder="Add Facility"
-                className="border p-3 rounded-lg w-full"
+                className="inputStyle w-full"
               />
 
               <button
                 type="button"
                 onClick={addFacility}
-                className="bg-indigo-600 text-white px-6 rounded-lg"
+                className="btnPrimary"
               >
                 Add
               </button>
-
             </div>
 
             <div className="flex flex-wrap gap-3 mt-5">
-
               {facilities.map((f,index)=>(
-                <div key={index} className="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full flex items-center gap-2">
+                <div key={index} className="tag">
                   {f}
-                  <span
-                    onClick={()=>removeFacility(index)}
-                    className="cursor-pointer text-red-500"
-                  >
-                    ×
-                  </span>
+                  <span onClick={()=>removeFacility(index)}>×</span>
                 </div>
               ))}
-
             </div>
-
           </div>
 
-          {/* CONTACT */}
-
-          <div className="bg-gray-50 p-6 rounded-xl shadow">
-
-            <h2 className="text-2xl font-semibold mb-5 text-indigo-600">
-              Contact Information
-            </h2>
+          <div className="glassInner">
+            <h2 className="sectionTitle">Contact Information</h2>
 
             <div className="grid md:grid-cols-2 gap-4">
-
-              <input name="contact_phone" value={form.contact_phone} onChange={handleChange} placeholder="Contact Phone" className="border p-3 rounded-lg" />
-
-              <input name="contact_email" value={form.contact_email} onChange={handleChange} placeholder="Contact Email" className="border p-3 rounded-lg" />
-
-              <input name="website" value={form.website} onChange={handleChange} placeholder="Website" className="border p-3 rounded-lg" />
-
-              <input name="contact_city" value={form.contact_city} onChange={handleChange} placeholder="City" className="border p-3 rounded-lg" />
-
-              <input name="contact_state" value={form.contact_state} onChange={handleChange} placeholder="State" className="border p-3 rounded-lg" />
-
-              <input name="contact_pincode" value={form.contact_pincode} onChange={handleChange} placeholder="Pincode" className="border p-3 rounded-lg" />
-
+              <input name="contact_phone" value={form.contact_phone} onChange={handleChange} placeholder="Contact Phone" className="inputStyle"/>
+              <input name="contact_email" value={form.contact_email} onChange={handleChange} placeholder="Contact Email" className="inputStyle"/>
+              <input name="website" value={form.website} onChange={handleChange} placeholder="Website" className="inputStyle"/>
+              <input name="contact_city" value={form.contact_city} onChange={handleChange} placeholder="City" className="inputStyle"/>
+              <input name="contact_state" value={form.contact_state} onChange={handleChange} placeholder="State" className="inputStyle"/>
+              <input name="contact_pincode" value={form.contact_pincode} onChange={handleChange} placeholder="Pincode" className="inputStyle"/>
             </div>
-
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl text-lg"
+            className="saveBtn"
           >
             Save School Profile
           </button>
@@ -668,6 +326,104 @@ const handleSubmit = async (e) => {
         </form>
 
       </div>
+
+<style>{`
+
+.mainBg{
+  background: linear-gradient(135deg,#001f2a,#00394d,#001a1f);
+}
+
+.glassCard{
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(25px);
+  border-radius:25px;
+  box-shadow:0 20px 60px rgba(0,255,255,0.15);
+}
+
+.glassInner{
+  background: rgba(255,255,255,0.05);
+  padding:20px;
+  border-radius:18px;
+  transition:0.4s;
+}
+
+.glassInner:hover{
+  transform: translateY(-5px);
+  box-shadow:0 10px 30px rgba(255,0,150,0.2);
+}
+
+.titleText{
+  font-size:34px;
+  font-weight:bold;
+  background: linear-gradient(90deg,#00ffff,#ff4da6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.sectionTitle{
+  font-size:22px;
+  margin-bottom:12px;
+  color:#00eaff;
+}
+
+.logoImg{
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  border:4px solid #00ffff;
+  object-fit:cover;
+}
+
+.uploadBtn{
+  display:inline-block;
+  margin-top:10px;
+  padding:8px 16px;
+  border-radius:20px;
+  background: linear-gradient(90deg,#00ffff,#ff4da6);
+  cursor:pointer;
+}
+
+.inputStyle{
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  background: rgba(255,255,255,0.08);
+  color:white;
+}
+
+.inputStyle::placeholder{
+  color:#ccc;
+}
+
+.btnPrimary{
+  background: linear-gradient(90deg,#00ffff,#ff4da6);
+  padding:10px 20px;
+  border-radius:10px;
+  color:white;
+}
+
+.checkboxLabel{
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+
+.tag{
+  background: rgba(255,255,255,0.1);
+  padding:6px 12px;
+  border-radius:20px;
+}
+
+.saveBtn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  background: linear-gradient(90deg,#00ffff,#ff4da6);
+  font-size:18px;
+  color:white;
+}
+
+`}</style>
 
     </div>
 

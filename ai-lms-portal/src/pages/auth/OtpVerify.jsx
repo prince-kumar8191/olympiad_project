@@ -13,7 +13,7 @@ function OTPVerify() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/verify-admin-otp",
+        `${import.meta.env.VITE_API_URL}/verify-admin-otp`,
         { email, otp }
       );
 

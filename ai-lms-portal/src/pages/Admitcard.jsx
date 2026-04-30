@@ -1,182 +1,44 @@
-// import React, { useRef } from "react";
-// import html2canvas from "html2canvas";
-// import jsPDF from "jspdf";
-// import admitImg from "../assets/Admit.png";
-// import logo from "../assets/logo.png"
-
-// function AdmitCard({ student }) {
-
-//   const cardRef = useRef();
-//   const data = student || {};
-
-
-//   const downloadPDF = async () => {
-//     try {
-//       const element = cardRef.current;
-
-//       const canvas = await html2canvas(element, {
-//         scale: 2,
-//         useCORS: true,
-//         backgroundColor: "#ffffff"
-//       });
-
-//       const imgData = canvas.toDataURL("image/png");
-
-//       const pdf = new jsPDF("landscape", "mm", "a4");
-
-//       const width = 297;
-//       const height = (canvas.height * width) / canvas.width;
-
-//       pdf.addImage(imgData, "PNG", 0, 0, width, height);
-//       pdf.save("NSMO_Admit_Card.pdf");
-
-//     } catch (err) {
-//       console.error("Download error:", err);
-//       alert("Download failed! Check images.");
-//     }
-//   };
-
-
-//   return (
-//     <div className="min-h-screen flex flex-col items-center p-5 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
-
-//       {/* BUTTON */}
-//       <button
-//         onClick={downloadPDF}
-//         className="mb-5 px-6 py-2 bg-indigo-600 text-white font-bold rounded-full hover:bg-indigo-700 transition"
-//       >
-//         Download Admit Card
-//       </button>
-
-//       {/* CARD */}
-//       <div
-//         ref={cardRef}
-//         className="w-full max-w-6xl bg-white border-4 border-yellow-400 rounded-xl shadow-2xl overflow-hidden"
-//       >
-
-//         <div className="flex">
-
-//           {/* 🔥 LEFT PANEL */}
-//           <div className="w-1/4 bg-yellow-300 p-4 flex flex-col justify-between items-center">
-
-//             {/* BIG NSMO LOGO */}
-//            <div className="flex items-center justify-center w-full h-full">
-//   <img
-//     src={admitImg}
-//     alt="Admit"
-//     className="w-full max-w-[240px] object-contain"
-//     crossOrigin="anonymous"
-//   />
-// </div>
-
-//             {/* LEVEL */}
-//             <p className="font-bold text-lg mt-2">2nd LEVEL</p>
-
-//             {/* ORG LOGO */}
-//             <img
-//               src={logo}
-//               alt="Bhayat Logo"
-//               className="w-40 mt-3"
-//               crossOrigin="anonymous"
-//             />
-
-//           </div>
-
-//           {/* CENTER */}
-//           <div className="w-1/2 p-6 text-sm space-y-2">
-
-//             <p><b>Date of Exam:</b> {data.examDate || "—"}</p>
-//             <p><b>Time of Exam:</b> {data.examTime || "—"}</p>
-//             <p><b>Reporting Time:</b> {data.reportingTime || "—"}</p>
-//             <p><b>Batch Code:</b> {data.batchCode || "—"}</p>
-
-//             <p className="pt-2"><b>Name:</b> {data.name || "—"}</p>
-
-//             <p><b>Class:</b> {data.class || "—"}</p>
-//             <p><b>Section:</b> {data.section || "—"}</p>
-
-//             <p><b>Roll No:</b> {data.rollNo || "—"}</p>
-
-//             <p><b>Centre:</b> {data.center || "—"}</p>
-
-//           </div>
-
-//           {/* RIGHT */}
-//           <div className="w-1/4 bg-yellow-100 p-4 text-center">
-
-//             {/* PHOTO */}
-//             {data.photo ? (
-//               <img
-//                 src={data.photo}
-//                 alt="student"
-//                 className="w-24 h-28 mx-auto border-2 border-black object-cover"
-//                 crossOrigin="anonymous"
-//               />
-//             ) : (
-//               <div className="w-24 h-28 mx-auto border-2 border-dashed border-black flex items-center justify-center">
-//                 Photo
-//               </div>
-//             )}
-
-//             <p className="text-[10px] mt-1">
-//               Passport size photograph attested
-//             </p>
-
-//             {/* SIGN */}
-//             <div className="mt-5">
-//               <p>Signature</p>
-//               <div className="border-t mt-5"></div>
-//             </div>
-
-//             {/* DIRECTORS */}
-//             <div className="mt-5 text-xs">
-//               <p className="font-bold">Pawan Negi</p>
-//               <p>Program Director</p>
-
-//               <p className="font-bold mt-2">Suraj Rawat</p>
-//               <p>General Secretary</p>
-//             </div>
-
-//           </div>
-//         </div>
-
-//         {/* FOOTER */}
-//         <div className="text-center text-xs bg-gray-100 py-1">
-//           Copy to be submitted at exam centre | Read instructions carefully
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default AdmitCard;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import React from "react";
+import axios from "axios";
 import jsPDF from "jspdf";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import admitImg from "../assets/Admit.png";
 import logo from "../assets/logo.png";
 
-function AdmitCard({ student }) {
+function AdmitCard() {
 
-  const data = student || {};
+  const { id } = useParams();
 
-  // 🔥 convert image to base64 (important for PDF)
+  const [student, setStudent] = useState(null);
+  const [exam, setExam] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/get-admit-card/${id}`
+        );
+
+        setStudent(res.data.student);
+        setExam(res.data.exam);
+
+      } catch (err) {
+        console.log(err);
+        if (err.response) {
+          alert(err.response.data.error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  // ✅ BASE64
   const toBase64 = async (url) => {
     const res = await fetch(url);
     const blob = await res.blob();
@@ -188,64 +50,47 @@ function AdmitCard({ student }) {
     });
   };
 
+  // ✅ PDF DOWNLOAD
   const downloadPDF = async () => {
+
     const pdf = new jsPDF("landscape", "mm", "a4");
 
-    // 🔥 load images
     const admitBase64 = await toBase64(admitImg);
     const logoBase64 = await toBase64(logo);
 
     let photoBase64 = null;
-    if (data.photo) {
+    if (student?.photo) {
       try {
-        photoBase64 = await toBase64(data.photo);
-      } catch {
-        console.log("photo load failed");
-      }
+        photoBase64 = await toBase64(student.photo);
+      } catch { }
     }
 
-    // 🔥 BORDER
-    pdf.setDrawColor(0);
     pdf.rect(5, 5, 287, 200);
 
-    // 🔥 LEFT PANEL BG
     pdf.setFillColor(230, 230, 230);
     pdf.rect(5, 5, 70, 200, "F");
 
-    // 🔥 Admit Image
     pdf.addImage(admitBase64, "PNG", 10, 10, 60, 60);
-
     pdf.setFontSize(14);
-    pdf.text("2nd LEVEL", 25, 80);
-
-    // 🔥 Logo
+    pdf.text("ADMIT CARD", 20, 80);
     pdf.addImage(logoBase64, "PNG", 15, 90, 50, 30);
-
-    // 🔥 CENTER TEXT
-    pdf.setFontSize(12);
 
     let y = 30;
 
-    pdf.text(`Date: ${data.examDate || "-"}`, 90, y);
-    y += 10;
-    pdf.text(`Time: ${data.examTime || "-"}`, 90, y);
-    y += 10;
-    pdf.text(`Reporting: ${data.reportingTime || "-"}`, 90, y);
-    y += 10;
-    pdf.text(`Batch: ${data.batchCode || "-"}`, 90, y);
-    y += 10;
+    pdf.setFontSize(12);
 
-    pdf.text(`Name: ${data.name || "-"}`, 90, y);
-    y += 10;
-    pdf.text(`Class: ${data.class || "-"}`, 90, y);
-    y += 10;
-    pdf.text(`Section: ${data.section || "-"}`, 90, y);
-    y += 10;
-    pdf.text(`Roll No: ${data.rollNo || "-"}`, 90, y);
-    y += 10;
-    pdf.text(`Centre: ${data.center || "-"}`, 90, y);
+    pdf.text(`StudentId: ${student?.StudentId || "-"}`, 90, y); y += 10;
+    pdf.text(`Name: ${student?.student_name || "-"}`, 90, y); y += 10;
+    pdf.text(`DOB: ${student?.dob || "-"}`, 90, y); y += 10;
+    pdf.text(`Class: ${student?.class || "-"}`, 90, y); y += 10;
+    pdf.text(`Subject: ${student?.subject || "-"}`, 90, y); y += 10;
 
-    // 🔥 RIGHT PANEL (PHOTO)
+    pdf.text(`Date: ${exam?.examDate || "-"}`, 90, y); y += 10;
+    pdf.text(`Time: ${exam?.examTime || "-"}`, 90, y); y += 10;
+    pdf.text(`Reporting: ${exam?.reportingTime || "-"}`, 90, y); y += 10;
+    pdf.text(`ExamMode: ${exam?.examMode || "-"}`, 90, y); y += 10;
+    pdf.text(`ExamCode: ${exam?.examCode || "-"}`, 90, y); y += 10;
+
     if (photoBase64) {
       pdf.addImage(photoBase64, "JPEG", 230, 20, 40, 50);
     } else {
@@ -256,38 +101,188 @@ function AdmitCard({ student }) {
     pdf.setFontSize(8);
     pdf.text("Passport size photograph", 225, 75);
 
-    // 🔥 SIGNATURE
     pdf.setFontSize(10);
-    pdf.text("Signature", 240, 100);
-    pdf.line(230, 110, 270, 110);
+    pdf.text("Signature", 40, 180);
+    pdf.line(30, 185, 90, 185);
 
-    // 🔥 DIRECTORS
-    pdf.setFontSize(10);
-    pdf.text("Pawan Negi", 230, 130);
-    pdf.text("Program Director", 230, 135);
+    pdf.text("Pawan Negi", 120, 180);
+    pdf.text("Program Director", 120, 185);
 
-    pdf.text("Suraj Rawat", 230, 150);
-    pdf.text("General Secretary", 230, 155);
+    pdf.text("Suraj Rawat", 220, 180);
+    pdf.text("General Secretary", 220, 185);
 
-    // 🔥 FOOTER
-    pdf.setFontSize(10);
-    pdf.text(
-      "Carry this admit card to exam centre",
-      100,
-      195
-    );
+    pdf.text("Carry this admit card to exam centre", 100, 195);
 
     pdf.save("Admit_Card.pdf");
   };
 
+  // 🔥 LOADING
+  if (loading) {
+    return <div className="p-10 text-center">Loading...</div>;
+  }
+
+  if (!student || !exam) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        Unable to load admit card
+      </div>
+    );
+  }
+
+  // ✅ UI
   return (
     <div className="flex flex-col items-center p-10">
+
+      <div className="w-[800px] border shadow-lg p-6 bg-white">
+
+        <div className="flex">
+
+          {/* LEFT */}
+          <div className="w-[150px] bg-gray-200 p-2 text-center">
+            <img src={admitImg} alt="" className="w-full" />
+            <p className="mt-2 font-bold">ADMIT CARD</p>
+            <img src={logo} alt="" className="mt-4 w-full" />
+          </div>
+
+          
+{/* CENTER */}
+<div className="flex-1 px-6">
+
+  <h1 className="text-2xl font-bold text-center mb-6">ADMIT CARD</h1>
+
+  <div className="grid grid-cols-2 gap-4">
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>🆔</div>
+      <div>
+        <p className="text-sm text-gray-500">Student ID</p>
+        <p className="font-semibold">{student.StudentId}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>👤</div>
+      <div>
+        <p className="text-sm text-gray-500">Name</p>
+        <p className="font-semibold">{student.student_name}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>🎂</div>
+      <div>
+        <p className="text-sm text-gray-500">DOB</p>
+        <p className="font-semibold">{student.dob}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>🏫</div>
+      <div>
+        <p className="text-sm text-gray-500">Class</p>
+        <p className="font-semibold">{student.class}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>📘</div>
+      <div>
+        <p className="text-sm text-gray-500">Subject</p>
+        <p className="font-semibold">{student.subject}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>📅</div>
+      <div>
+        <p className="text-sm text-gray-500">Exam Date</p>
+        <p className="font-semibold">{exam.examDate}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>⏰</div>
+      <div>
+        <p className="text-sm text-gray-500">Exam Time</p>
+        <p className="font-semibold">{exam.examTime}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>⏳</div>
+      <div>
+        <p className="text-sm text-gray-500">Reporting Time</p>
+        <p className="font-semibold">{exam.reportingTime}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>💻</div>
+      <div>
+        <p className="text-sm text-gray-500">Exam Mode</p>
+        <p className="font-semibold">{exam.examMode}</p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-sm">
+      <div>#️⃣</div>
+      <div>
+        <p className="text-sm text-gray-500">Exam Code</p>
+        <p className="font-semibold">{exam.examCode}</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+          {/* RIGHT */}
+          <div className="w-[150px] text-center">
+            {student.photo ? (
+              <img
+                src={student.photo}
+                className="w-[120px] h-[150px] object-cover mx-auto"
+                alt=""
+              />
+            ) : (
+              <div className="w-[120px] h-[150px] border mx-auto flex items-center justify-center">
+                Photo
+              </div>
+            )}
+            <p className="text-xs mt-2">Passport size photograph</p>
+          </div>
+
+        </div>
+
+        {/* SIGNATURE SECTION */}
+        <div className="flex justify-between mt-10 text-sm">
+
+          <div>
+            <p>Signature</p>
+            <div className="w-[120px] border-t mt-2"></div>
+          </div>
+
+          <div className="text-center">
+            <p>Pawan Negi</p>
+            <p className="w-[120px] border-t mt-2">Program Director</p>
+          </div>
+
+          <div className="text-center">
+            <p>Suraj Rawat</p>
+            <p className="w-[120px] border-t mt-2">General Secretary</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* BUTTON */}
       <button
         onClick={downloadPDF}
-        className="px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg"
+        className="mt-6 px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg"
       >
         Download Admit Card
       </button>
+
     </div>
   );
 }

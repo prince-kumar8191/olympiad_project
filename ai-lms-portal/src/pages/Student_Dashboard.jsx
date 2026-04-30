@@ -1,485 +1,210 @@
-// import React from "react";
-// import { Link } from "react-router-dom";
-
-
-// export default function StudentDashboard() {
-//     return (
-//         <div className="bg-gray-100 font-sans h-screen flex">
-
-//             {/* SIDEBAR */}
-//             <div className="w-64 bg-gradient-to-b from-indigo-700 to-purple-700 text-white flex flex-col">
-
-//                 <div className="p-6 text-2xl font-bold border-b border-indigo-400">
-//                     Student Portal
-//                 </div>
-
-//                 <nav className="flex-1 p-4 space-y-2">
-
-//                     <a className="block p-3 rounded-lg bg-white text-indigo-700 font-semibold">
-//                         🏠 Dashboard
-//                     </a>
-
-//                     <Link
-//                         to="/StudentProfile"
-//                         className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer"
-//                     >
-//                         👤 My Profile
-//                     </Link>
-
-
-
-//                     <Link 
-//                         to="/ExamInstructions"                   
-//                     className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-//                         🧪 My Exams
-//                     </Link>
-
-//                     <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-//                         📝 Mock Tests
-//                     </a>
-
-//                     <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-//                         📚  PYQ
-//                     </a>
-
-//                     <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-//                         📊 Results
-//                     </a>
-
-//                     <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-//                         🏆 Certificates
-//                     </a>
-
-//                 </nav>
-//             </div>
-
-//             {/* MAIN AREA */}
-//             <div className="flex-1 flex flex-col">
-
-//                 {/* TOPBAR */}
-//                 <div className="bg-white shadow p-4 flex justify-between items-center">
-
-//                     <input
-//                         type="text"
-//                         placeholder="Search exams..."
-//                         className="border px-4 py-2 rounded-lg w-72"
-//                     />
-
-//                     <div className="flex items-center gap-4">
-//                         <button className="text-xl">🔔</button>
-
-//                         <img
-//                             src="https://i.pravatar.cc/40"
-//                             alt="profile"
-//                             className="rounded-full"
-//                         />
-//                     </div>
-
-//                 </div>
-
-//                 {/* CONTENT */}
-//                 <div className="p-8 overflow-y-auto">
-
-//                     <h1 className="text-3xl font-bold mb-6 text-gray-700">
-//                         Welcome Student
-//                     </h1>
-
-//                     {/* DASHBOARD CARDS */}
-//                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-
-//                         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-//                             <p>Registered Exams</p>
-//                             <h2 className="text-3xl font-bold mt-2">00</h2>
-//                         </div>
-
-//                         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-//                             <p>Mock Tests Completed</p>
-//                             <h2 className="text-3xl font-bold mt-2">00</h2>
-//                         </div>
-
-//                         <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-//                             <p>Best Score</p>
-//                             <h2 className="text-3xl font-bold mt-2">00%</h2>
-//                         </div>
-
-//                         <div className="bg-gradient-to-r from-pink-500 to-red-500 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-//                             <p>Certificates Earned</p>
-//                             <h2 className="text-3xl font-bold mt-2">00</h2>
-//                         </div>
-
-//                     </div>
-
-
-//                     {/* QUICK ACTIONS */}
-//                     <div className="grid md:grid-cols-4 gap-6 mb-10">
-
-//                         <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-//                             <h3 className="text-xl font-bold text-indigo-600 mb-2">
-//                                 Start Mock Test
-//                             </h3>
-//                             <p className="text-gray-500">Practice before exam</p>
-//                         </button>
-
-//                         <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-//                             <h3 className="text-xl font-bold text-indigo-600 mb-2">
-//                                 View Exams
-//                             </h3>
-//                             <p className="text-gray-500">Check upcoming exams</p>
-//                         </button>
-
-//                         <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-//                             <h3 className="text-xl font-bold text-indigo-600 mb-2">
-//                                 View Results
-//                             </h3>
-//                             <p className="text-gray-500">Check exam results</p>
-//                         </button>
-
-//                         <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-//                             <h3 className="text-xl font-bold text-indigo-600 mb-2">
-//                                 Download Certificate
-//                             </h3>
-//                             <p className="text-gray-500">Get your certificates</p>
-//                         </button>
-
-//                     </div>
-
-
-//                     {/* EXAMS TABLE */}
-//                     <div className="bg-white p-6 rounded-xl shadow">
-
-//                         <div className="flex justify-between items-center mb-4">
-//                             <h3 className="text-xl font-bold">Upcoming Exams</h3>
-//                         </div>
-
-//                         <table className="w-full">
-
-//                             <thead className="border-b text-gray-500">
-
-//                                 <tr>
-//                                     <th className="text-left py-2">Exam</th>
-//                                     <th className="text-left">Subject</th>
-//                                     <th className="text-left">Date</th>
-//                                     <th className="text-left">Action</th>
-//                                 </tr>
-
-//                             </thead>
-
-//                             <tbody>
-
-//                                 <tr className="border-b hover:bg-gray-50">
-
-//                                     <td className="py-3">Olympiad 2026</td>
-//                                     <td>Mathematics</td>
-//                                     <td>15 March 2026</td>
-
-//                                     <td>
-//                                         <button className="bg-indigo-600 text-white px-3 py-1 rounded">
-//                                             Start
-//                                         </button>
-//                                     </td>
-
-//                                 </tr>
-
-//                                 <tr>
-
-//                                     <td className="py-3">Olympiad 2026</td>
-//                                     <td>Science</td>
-//                                     <td>18 March 2026</td>
-
-//                                     <td>
-//                                         <button className="bg-gray-400 text-white px-3 py-1 rounded">
-//                                             Locked
-//                                         </button>
-//                                     </td>
-
-//                                 </tr>
-
-//                             </tbody>
-
-//                         </table>
-
-//                     </div>
-
-//                 </div>
-
-//             </div>
-
-//         </div>
-//     );
-// }
-
-
-
-
-
-
-
 
 
 
 import React from "react";
 import { Link } from "react-router-dom";
 
+
 export default function StudentDashboard() {
 
-    // Get student data safely from localStorage
     const studentData = JSON.parse(localStorage.getItem("student") || "{}");
-    const name = studentData?.name || "Student";
-     const StudentId = studentData?.StudentId || "StudentId";
 
-    // Profile photo logic:
-    // - If student uploaded photo → use it
-    // - If not → generic default avatar
+    const name = studentData?.name || "Student";
+    const studentId = localStorage.getItem("studentId");
+    const StudentId = studentData?.StudentId?.trim() || "";
+
     const profilePhoto = studentData?.photo
         ? studentData.photo
-        : "https://www.w3schools.com/howto/img_avatar.png"; // generic default avatar
+        : "https://www.w3schools.com/howto/img_avatar.png";
 
     return (
-        <div className="bg-gray-100 font-sans h-screen flex">
+        <div className="h-screen flex bg-gradient-to-br from-black via-indigo-900 to-purple-900 text-white overflow-hidden">
+
+            {/* 🔥 Animated Background Glow */}
+            <div className="absolute w-[500px] h-[500px] bg-purple-600 opacity-30 blur-3xl rounded-full top-[-100px] left-[-100px] animate-pulse"></div>
+            <div className="absolute w-[400px] h-[400px] bg-indigo-500 opacity-30 blur-3xl rounded-full bottom-[-100px] right-[-100px] animate-pulse"></div>
 
             {/* SIDEBAR */}
-            <div className="w-64 bg-gradient-to-b from-indigo-700 to-purple-700 text-white flex flex-col">
+            <div className="w-64 backdrop-blur-2xl bg-white/10 border-r border-white/20 shadow-2xl flex flex-col z-10">
 
-                <div className="p-6 text-2xl font-bold border-b border-indigo-400">
-                    Student Portal
+                <div className="p-6 text-2xl font-bold border-b border-white/20 tracking-wide">
+                    🎓 Student Portal
                 </div>
 
-                <nav className="flex-1 p-4 space-y-2">
+                <nav className="flex-1 p-4 space-y-2 text-sm">
 
-                    <a className="block p-3 rounded-lg bg-white text-indigo-700 font-semibold">
+                    <a className="block p-3 rounded-xl bg-white/20 backdrop-blur-md font-semibold shadow-lg hover:scale-105 transition">
                         🏠 Dashboard
                     </a>
 
-                    <Link
-                        to="/StudentProfile"
-                        className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer"
-                    >
+                    <Link to="/StudentProfile" className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
                         👤 My Profile
                     </Link>
-                  
 
-                  <Link
-                        to="/ExamInstructions"
-                        className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer"
-                    >
-                        🧪 My Exams
+                    <Link to="/ExamInstructions" className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                        🧪 Olympiad Exams
                     </Link>
 
-                    
-
-                    <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
+                    <Link to="/MockStart" className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
                         📝 Mock Tests
-                    </a>
+                    </Link>
 
-                    <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
+                    <a className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
                         📚 PYQ
                     </a>
 
-                      <Link
-                        to="/register"
-                        className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer"
-                    >
-                       🎯 Register Now 
+                    <Link to="/register" className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                        🎯 Register Now
                     </Link>
 
-
-                    <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
+                    <a className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
                         📊 Results
                     </a>
 
-                    <a className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-                        🏆 Certificates
-                    </a>
-
-                    <Link
-                        to="/BenefitPay"
-                        className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-                        Benefit and Pay
+                    <Link to={`/SkillExamLogin`} className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                        Skill Test Login
                     </Link>
 
-                    <Link
-                        to="/StudentRefer"
-                        className="block p-3 rounded-lg hover:bg-indigo-600 transition cursor-pointer">
-                        Referral Points and Refer
+                    <Link to={`/Skill_Result/${studentId}`} className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                        Skill Test Result
                     </Link>
 
-                    {/* LOGOUT BUTTON */}
+
+                    <Link
+                        to="/Student_paid_unpaid"
+                        className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105"
+                    >
+                        Payement Status
+                    </Link>
+
+
+                    <Link to="/BenefitPay" className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                        💰 Benefit and Pay
+                    </Link>
+
+                    <Link to="/StudentRefer" className="block p-3 rounded-xl hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                        🤝 Referral Points and Refer
+                    </Link>
+
                     <button
                         onClick={() => {
                             localStorage.clear();
                             window.location.href = "/login";
                         }}
-                        className="flex items-center gap-3 p-4 hover:bg-red-500 rounded-lg mt-2"
+                        className="w-full text-left p-3 rounded-xl bg-red-500/30 hover:bg-red-500 transition mt-3 hover:scale-105"
                     >
-                        Logout
+                        🔓 Logout
                     </button>
-
 
                 </nav>
             </div>
 
             {/* MAIN AREA */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col z-10">
 
                 {/* TOPBAR */}
-                <div className="bg-white shadow p-4 flex justify-between items-center">
+                <div className="backdrop-blur-2xl bg-white/10 border-b border-white/20 p-4 flex justify-between items-center shadow-lg">
 
                     <input
                         type="text"
                         placeholder="Search exams..."
-                        className="border px-4 py-2 rounded-lg w-72"
+                        className="bg-white/20 border border-white/30 px-4 py-2 rounded-xl outline-none focus:ring-2 focus:ring-indigo-400 transition focus:scale-105"
                     />
 
-
                     <div className="flex items-center gap-4">
-                        <button className="text-xl">🔔</button>
 
+                        <button className="text-xl hover:scale-125 transition duration-300">🔔</button>
 
                         <div className="text-right">
+                            <p className="text-xs opacity-70">Student ID</p>
+                            <p className="font-bold text-indigo-300 animate-pulse">{StudentId}</p>
+                        </div>
 
-                <p className="text-sm text-gray-500">Student ID</p>
-                <p className="font-bold text-indigo-600">{StudentId}</p>
-            </div>
-
-                        {/* Profile Photo */}
                         <img
                             src={profilePhoto}
                             alt="profile"
-                            className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500"
+                            className="w-10 h-10 rounded-full border-2 border-indigo-400 shadow-lg hover:scale-125 transition duration-300"
                         />
                     </div>
-
                 </div>
 
                 {/* CONTENT */}
                 <div className="p-8 overflow-y-auto">
 
-                    {/* NAME SHOW HERE */}
-                    <h1 className="text-3xl font-bold mb-6 text-gray-700">
-                        Welcome {name}
+                    <h1 className="text-3xl font-bold mb-6">
+                        Welcome <span className="text-indigo-400 animate-pulse">{name}</span>
                     </h1>
 
-                    {/* DASHBOARD CARDS */}
+                    {/* CARDS */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
 
-                        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-                            <p>Registered Exams</p>
-                            <h2 className="text-3xl font-bold mt-2">00</h2>
-                        </div>
-
-                        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-                            <p>Mock Tests Completed</p>
-                            <h2 className="text-3xl font-bold mt-2">00</h2>
-                        </div>
-
-                        <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-                            <p>Best Score</p>
-                            <h2 className="text-3xl font-bold mt-2">00%</h2>
-                        </div>
-
-                        <div className="bg-gradient-to-r from-pink-500 to-red-500 text-white p-6 rounded-xl shadow hover:scale-105 transition">
-                            <p>Certificates Earned</p>
-                            <h2 className="text-3xl font-bold mt-2">00</h2>
-                        </div>
+                        {[
+                            { title: "Registered Exams", value: "00" },
+                            { title: "Mock Tests Completed", value: "00" },
+                            { title: "Best Score", value: "00%" },
+                            { title: "Certificates Earned", value: "00" }
+                        ].map((card, i) => (
+                            <div key={i} className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20 shadow-xl hover:scale-110 hover:shadow-indigo-500/50 transition duration-300">
+                                <p className="opacity-70">{card.title}</p>
+                                <h2 className="text-3xl font-bold mt-2 text-indigo-300">{card.value}</h2>
+                            </div>
+                        ))}
 
                     </div>
 
                     {/* QUICK ACTIONS */}
                     <div className="grid md:grid-cols-4 gap-6 mb-10">
 
-                        <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-                            
-                            <Link
-                             to="/Admitcard"
-                            className="text-xl font-bold text-indigo-600 mb-2">
-                                Admit Card 
-                            </Link>
-                            <p className="text-gray-500">Download Admit Card </p>
-                        </button>
-
-                        <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-                            <h3 className="text-xl font-bold text-indigo-600 mb-2">
-                                View Exams
-                            </h3>
-                            <p className="text-gray-500">Check upcoming exams</p>
-                        </button>
-
-                        <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-                            <h3 className="text-xl font-bold text-indigo-600 mb-2">
-                                View Results
-                            </h3>
-                            <p className="text-gray-500">Check exam results</p>
-                        </button>
-
-                        <button className="bg-white shadow rounded-xl p-6 hover:shadow-lg transition text-center">
-                            <h3 className="text-xl font-bold text-indigo-600 mb-2">
-                                Download Certificate
-                            </h3>
-                            <p className="text-gray-500">Get your certificates</p>
-                        </button>
-
-                    </div>
-
-                    {/* EXAMS TABLE */}
-                    <div className="bg-white p-6 rounded-xl shadow">
-
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-bold">Upcoming Exams</h3>
+                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl hover:scale-110 hover:shadow-indigo-500/50 transition text-center border border-white/20">
+                            {StudentId ? (
+                                <Link to={`/Admitcard/${StudentId}`}>Open Admit Card</Link>
+                            ) : <p>Loading...</p>}
+                            <p className="opacity-70">Download Admit Card</p>
                         </div>
 
-                        <table className="w-full">
+                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl hover:scale-110 hover:shadow-indigo-500/50 transition text-center border border-white/20">
+                            <h3 className="text-xl font-bold text-indigo-300 mb-2">View Exams</h3>
+                            <p className="opacity-70">Check upcoming exams</p>
+                        </div>
 
-                            <thead className="border-b text-gray-500">
+                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl hover:scale-110 hover:shadow-indigo-500/50 transition text-center border border-white/20">
+                            {StudentId ? (
+                                <Link to={`/ResultPage/${StudentId}`} className="text-indigo-300 font-bold">
+                                    View Results
+                                </Link>
+                            ) : <p>Loading...</p>}
+                            <p className="opacity-70">Check exam results</p>
+                        </div>
 
-                                <tr>
-                                    <th className="text-left py-2">Exam</th>
-                                    <th className="text-left">Subject</th>
-                                    <th className="text-left">Date</th>
-                                    <th className="text-left">Action</th>
-                                </tr>
+                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl hover:scale-110 hover:shadow-indigo-500/50 transition text-center border border-white/20">
+                            {StudentId ? (
+                                <Link to={`/Omr_View/${StudentId}`} className="text-indigo-300 font-bold">
+                                    View Results
+                                </Link>
+                            ) : <p>Loading...</p>}
+                            <p className="opacity-70">Check exam results</p>
+                        </div>
 
-                            </thead>
+                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl hover:scale-110 hover:shadow-indigo-500/50 transition text-center border border-white/20">
+                            {StudentId ? (
+                                <Link to={`/certificate/${StudentId}`}>Download Certificate</Link>
+                            ) : <p>Loading...</p>}
+                            <p className="opacity-70">Get your certificate</p>
+                        </div>
 
-                            <tbody>
-
-                                <tr className="border-b hover:bg-gray-50">
-
-                                    <td className="py-3">Olympiad 2026</td>
-                                    <td>Mathematics</td>
-                                    <td>15 March 2026</td>
-
-                                    <td>
-                                        <button className="bg-indigo-600 text-white px-3 py-1 rounded">
-                                            Start
-                                        </button>
-                                    </td>
-
-                                </tr>
-
-                                <tr>
-
-                                    <td className="py-3">Olympiad 2026</td>
-                                    <td>Science</td>
-                                    <td>18 March 2026</td>
-
-                                    <td>
-                                        <button className="bg-gray-400 text-white px-3 py-1 rounded">
-                                            Locked
-                                        </button>
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
+                        <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl shadow-xl hover:scale-110 hover:shadow-indigo-500/50 transition text-center border border-white/20">
+                            {StudentId ? (
+                                <Link to={`/School_certificate/${StudentId}`}>Download Skill Certificate</Link>
+                            ) : <p>Loading...</p>}
+                            <p className="opacity-70">Get your Skill certificate</p>
+                        </div>
 
                     </div>
 
+
+
                 </div>
-
             </div>
-
         </div>
     );
 }

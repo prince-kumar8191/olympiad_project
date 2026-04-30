@@ -1,228 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-
-// export default function VolunteerManagement() {
-
-//   const [search, setSearch] = useState("");
-//   const [volunteers, setVolunteers] = useState([]);
-//   const [selected, setSelected] = useState(null);
-
-//   // ================= FETCH =================
-//   useEffect(() => {
-//     fetchVolunteers();
-//   }, []);
-
-//   const fetchVolunteers = async () => {
-//     try {
-//       const res = await axios.get("http://localhost:5000/admin/volunteers");
-//       console.log("VOL DATA:", res.data.data);
-//       setVolunteers(res.data.data || []);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   // ================= APPROVE =================
-//   const approveVolunteer = async (id) => {
-//     await axios.put(
-//       `http://localhost:5000/admin/volunteer-status/${id}`,
-//       { status: "approved" }
-//     );
-//     fetchVolunteers();
-//   };
-
-//   // ================= REJECT =================
-//   const rejectVolunteer = async (id) => {
-//     await axios.put(
-//       `http://localhost:5000/admin/volunteer-status/${id}`,
-//       { status: "rejected" }
-//     );
-//     fetchVolunteers();
-//   };
-
-//   // ================= BLOCK =================
-//   const toggleBlock = async (id) => {
-//     await axios.put(`http://localhost:5000/admin/toggle-volunteer/${id}`);
-//     fetchVolunteers();
-//   };
-
-//   // ================= ADD CREDIT =================
-//   const addCredit = async (id) => {
-//     const points = parseInt(prompt("Enter Credit Points"));
-//     if (!points) return;
-
-//     await axios.post("http://localhost:5000/admin/add-volunteer-credits", {
-//       volunteerId: id,
-//       credits: points
-//     });
-
-//     fetchVolunteers();
-//   };
-
-//   // ================= SEARCH =================
-//   const filtered = volunteers.filter(v =>
-//     v.name?.toLowerCase().includes(search.toLowerCase())
-//   );
-
-//   return (
-
-//     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-8">
-
-//       <h1 className="text-3xl font-bold mb-8">
-//         Volunteer Management Dashboard
-//       </h1>
-
-//       {/* SEARCH */}
-//       <input
-//         type="text"
-//         placeholder="Search Volunteer..."
-//         className="w-full p-3 border rounded-lg mb-6 shadow"
-//         onChange={(e) => setSearch(e.target.value)}
-//       />
-
-//       {/* TABLE */}
-//       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-
-//         <table className="w-full text-center">
-
-//           <thead className="bg-indigo-500 text-white">
-//             <tr>
-//               <th className="p-3">ID</th>
-//               <th>Name</th>
-//               <th>Email</th>
-//               <th>Status</th>
-//               <th>Credits</th>
-//               <th>Actions</th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-
-//             {filtered.map(v => (
-
-//               <tr key={v.volunteerId} className="border-t hover:bg-gray-50">
-
-//                 <td className="p-3">{v.volunteerId}</td>
-//                 <td>{v.name}</td>
-//                 <td>{v.email}</td>
-
-//                 <td>
-//                   {v.status === "approved" && (
-//                     <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">
-//                       Approved
-//                     </span>
-//                   )}
-
-//                   {v.status === "pending" && (
-//                     <span className="bg-orange-200 text-orange-700 px-3 py-1 rounded-full text-sm">
-//                       Pending
-//                     </span>
-//                   )}
-
-//                   {v.status === "rejected" && (
-//                     <span className="bg-red-200 text-red-700 px-3 py-1 rounded-full text-sm">
-//                       Rejected
-//                     </span>
-//                   )}
-//                 </td>
-
-//                 {/* ✅ CREDIT FIX */}
-//                 <td className="font-bold text-purple-600">
-//                   ⭐ {Number(v.credits) || 0}
-//                 </td>
-
-//                 <td className="flex gap-2 justify-center flex-wrap p-2">
-
-//                   <button
-//                     onClick={() => setSelected(v)}
-//                     className="bg-gray-700 text-white px-3 py-1 rounded"
-//                   >
-//                     View
-//                   </button>
-
-//                   <button
-//                     onClick={() => approveVolunteer(v.volunteerId)}
-//                     className="bg-green-500 text-white px-3 py-1 rounded"
-//                   >
-//                     Approve
-//                   </button>
-
-//                   <button
-//                     onClick={() => rejectVolunteer(v.volunteerId)}
-//                     className="bg-red-500 text-white px-3 py-1 rounded"
-//                   >
-//                     Reject
-//                   </button>
-
-//                   <button
-//                     onClick={() => addCredit(v.volunteerId)}
-//                     className="bg-purple-500 text-white px-3 py-1 rounded"
-//                   >
-//                     Credit +
-//                   </button>
-
-//                   {v.status === "approved" && (
-//                     <button
-//                       onClick={() => toggleBlock(v.volunteerId)}
-//                       className={`px-3 py-1 rounded text-white ${
-//                         v.blocked ? "bg-yellow-500" : "bg-black"
-//                       }`}
-//                     >
-//                       {v.blocked ? "Unblock" : "Block"}
-//                     </button>
-//                   )}
-
-//                 </td>
-
-//               </tr>
-
-//             ))}
-
-//           </tbody>
-
-//         </table>
-
-//       </div>
-
-//       {/* MODAL */}
-//       {selected && (
-
-//         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-
-//           <div className="bg-white p-6 rounded-xl w-96">
-
-//             <h2 className="text-2xl font-bold mb-4">
-//               Volunteer Profile
-//             </h2>
-
-//             <p><b>ID:</b> {selected.volunteerId}</p>
-//             <p><b>Name:</b> {selected.name}</p>
-//             <p><b>Email:</b> {selected.email}</p>
-//             <p><b>Credits:</b> ⭐ {Number(selected.credits) || 0}</p>
-
-//             <button
-//               onClick={() => setSelected(null)}
-//               className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded"
-//             >
-//               Close
-//             </button>
-
-//           </div>
-
-//         </div>
-
-//       )}
-
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
 
 
 
@@ -238,59 +13,69 @@ export default function VolunteerManagement() {
 
     const [search, setSearch] = useState("");
     const [volunteers, setVolunteers] = useState([]);
+    const [resumeModal, setResumeModal] = useState(false);
+    const [resumeUrl, setResumeUrl] = useState("");
     const [selected, setSelected] = useState(null);
+    const [assignAllMode, setAssignAllMode] = useState(false);
+    const [taskModal, setTaskModal] = useState(false);
+    const [currentVolunteer, setCurrentVolunteer] = useState(null);
+    const [customTask, setCustomTask] = useState("");
 
-    // ================= FETCH =================
+    const taskList = [
+        "Register new school details (name, address, board, contact info)",
+        "Register new institute/coaching centers/partners (name, address, board, contact info)",
+        "Upload and verify institute credentials",
+        "Monitor institute performance & enrollments",
+        "Monitor school performance & enrollments",
+        "Total no of free students added in LMS system",
+        "Total no of paid students added in LMS system",
+        "Verify payment status",
+        "New added / onboard volunteers",
+        "New added / onboard interns",
+        "Guide how many students through payment process",
+        "Contact schools/institutes for onboarding",
+        "Resolve student queries and doubts",
+        "Prepare and update daily performance reports",
+        "Prepare and update weekly performance reports",
+        "Work which portal of Organizations Edu/Bhakti/Olympia/Donation",
+        "Conduct meetings with schools and institutes. Mention name?",
+        "Promote awareness via WhatsApp and social media, mention the detail",
+        "Daily calling data updated, please mention and update the sheet"
+    ];
+
     useEffect(() => {
         fetchVolunteers();
     }, []);
 
     const fetchVolunteers = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/admin/volunteers");
-            console.log("VOL DATA:", res.data);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/volunteers`);
             setVolunteers(res.data.data || []);
         } catch (err) {
-            console.error("FETCH ERROR:", err);
+            console.error(err);
         }
     };
 
-    // ================= APPROVE =================
     const approveVolunteer = async (id) => {
-        await axios.put(
-            `http://localhost:5000/admin/volunteer-status/${id}`,
-            { status: "approved" }
-        );
+        await axios.put(`${import.meta.env.VITE_API_URL}/admin/volunteer-status/${id}`, { status: "approved" });
         fetchVolunteers();
     };
 
-    // ================= REJECT =================
     const rejectVolunteer = async (id) => {
-        await axios.put(
-            `http://localhost:5000/admin/volunteer-status/${id}`,
-            { status: "rejected" }
-        );
+        await axios.put(`${import.meta.env.VITE_API_URL}/admin/volunteer-status/${id}`, { status: "rejected" });
         fetchVolunteers();
     };
 
-    // ================= BLOCK / UNBLOCK =================
     const toggleBlock = async (id) => {
-        await axios.put(
-            `http://localhost:5000/admin/toggle-volunteer-block/${id}`
-        );
+        await axios.put(`${import.meta.env.VITE_API_URL}/admin/toggle-volunteer-block/${id}`);
         fetchVolunteers();
     };
 
-    // ================= ADD CREDIT =================
     const addCredit = async (id) => {
         const points = parseInt(prompt("Enter Credit Points"));
+        if (!points || points <= 0) return alert("Invalid points");
 
-        if (!points || points <= 0) {
-            alert("Invalid points");
-            return;
-        }
-
-        await axios.post("http://localhost:5000/admin/add-volunteer-credits", {
+        await axios.post(`${import.meta.env.VITE_API_URL}/admin/add-volunteer-credits`, {
             volunteerId: id,
             credits: points
         });
@@ -299,185 +84,345 @@ export default function VolunteerManagement() {
         fetchVolunteers();
     };
 
-    // ================= SEARCH =================
+
+    // ================view resume===============
+
+    const viewResume = (id) => {
+        const url = `${import.meta.env.VITE_API_URL}/admin/get-volunteer-resume/${id}`;
+        setResumeUrl(url);
+        setResumeModal(true);
+    };
+
+
+    const removeCredit = async (id) => {
+        const points = parseInt(prompt("Enter Credit Points to Deduct"));
+        if (!points || points <= 0) return alert("Invalid points");
+
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/admin/remove-volunteer-credits`,
+                { volunteerId: id, credits: points }
+            );
+
+            alert(res.data.message || "Credits Deducted Successfully ✅");
+            fetchVolunteers();
+
+        } catch (err) {
+            alert("Error while deducting credits ❌");
+        }
+    };
+
+// ================ ASSIGN TASK TO ALL =================
+    const assignTaskToAll = async () => {
+    const task = customTask.trim();
+
+    if (!task) return alert("Enter task first");
+
+    try {
+        await axios.post(`${import.meta.env.VITE_API_URL}/admin/assign-task-all`, {
+            task: task
+        });
+
+        alert("Task Assigned to ALL Volunteers ✅");
+        setTaskModal(false);
+        setCustomTask("");
+        fetchVolunteers();
+
+    } catch (err) {
+        alert("Error assigning task ❌");
+    }
+};
+
+   
+    const assignTask = async (task) => {
+
+    try {
+        if (assignAllMode) {
+            // 🔥 ALL VOLUNTEERS
+            await axios.post(`${import.meta.env.VITE_API_URL}/admin/assign-task-all`, {
+                task: task
+            });
+
+            alert("Task Assigned to ALL Volunteers ✅");
+
+        } else {
+            // 👤 SINGLE VOLUNTEER
+            if (!currentVolunteer) return;
+
+            await axios.post(`${import.meta.env.VITE_API_URL}/admin/assign-volunteer-task`, {
+                volunteerId: currentVolunteer.volunteerId,
+                task: task
+            });
+
+            alert("Task Assigned ✅");
+        }
+
+        setTaskModal(false);
+        setCustomTask("");
+        setAssignAllMode(false);
+        fetchVolunteers();
+
+    } catch (err) {
+        alert("Error ❌");
+    }
+};
+
     const filtered = volunteers.filter(v =>
         v.name?.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] p-4 sm:p-6 md:p-8 text-white">
 
-            <h1 className="text-3xl font-bold mb-8">
-                Volunteer Management Dashboard
+            {/* HEADER */}
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 sm:mb-8 tracking-wide bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
+                🚀 Volunteer Management Dashboard
             </h1>
+    <button
+    onClick={() => {
+        setAssignAllMode(true);   // 🔥 ALL MODE ON
+        setTaskModal(true);
+    }}
+    className="bg-purple-600 text-white py-2 px-4 rounded-lg w-full mb-3"
+>
+    🚀 Assign Task to All Volunteers
+</button>
+
 
             {/* SEARCH */}
             <input
                 type="text"
-                placeholder="Search Volunteer..."
-                className="w-full p-3 border rounded-lg mb-6 shadow"
+                placeholder="🔍 Search Volunteer..."
+                className="w-full p-3 sm:p-4 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg mb-6 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
                 onChange={(e) => setSearch(e.target.value)}
             />
 
             {/* TABLE */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden">
 
-                <table className="w-full text-center">
+                {/* ✅ MOBILE SCROLL FIX */}
+                <div className="overflow-x-auto">
 
-                    <thead className="bg-indigo-500 text-white">
-                        <tr>
-                            <th className="p-3">ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Credits</th>
-                            <th>Actions</th>
-                            <th>Task</th>
-                        </tr>
-                    </thead>
+                    <table className="w-full text-center text-xs sm:text-sm md:text-base min-w-[800px]">
 
-                    <tbody>
-                        {filtered.map(v => (
-                            <tr key={v.volunteerId} className="border-t hover:bg-gray-50">
-
-                                <td className="p-3">{v.volunteerId}</td>
-                                <td>{v.name}</td>
-                                <td>{v.email}</td>
-
-                                {/* STATUS */}
-                                <td>
-                                    {v.status === "approved" && (
-                                        <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">
-                                            Approved
-                                        </span>
-                                    )}
-
-                                    {v.status === "pending" && (
-                                        <span className="bg-orange-200 text-orange-700 px-3 py-1 rounded-full text-sm">
-                                            Pending
-                                        </span>
-                                    )}
-
-                                    {v.status === "rejected" && (
-                                        <span className="bg-red-200 text-red-700 px-3 py-1 rounded-full text-sm">
-                                            Rejected
-                                        </span>
-                                    )}
-
-                                    {v.status === "blocked" && (
-                                        <span className="bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm">
-                                            Blocked
-                                        </span>
-                                    )}
-                                </td>
-
-                                {/* ✅ CREDITS */}
-
-                                <td className="font-bold text-purple-600">
-                                    ⭐ {v.credits || 0}
-                                    {v.credits === 0 && (
-                                        <span className="text-gray-400 text-xs ml-2">(No referrals)</span>
-                                    )}
-                                </td>
-
-                                <td>{v.task || "No Task"}</td>
-                                {/* ACTIONS */}
-                                <td className="flex gap-2 justify-center flex-wrap p-2">
-
-                                    <button
-                                        onClick={() => setSelected(v)}
-                                        className="bg-gray-700 text-white px-3 py-1 rounded"
-                                    >
-                                        View
-                                    </button>
-
-                                    <button
-                                        onClick={() => approveVolunteer(v.volunteerId)}
-                                        className="bg-green-500 text-white px-3 py-1 rounded"
-                                    >
-                                        Approve
-                                    </button>
-
-                                    <button
-                                        onClick={() => rejectVolunteer(v.volunteerId)}
-                                        className="bg-red-500 text-white px-3 py-1 rounded"
-                                    >
-                                        Reject
-                                    </button>
-
-                                    <button
-                                        onClick={() => addCredit(v.volunteerId)}
-                                        className="bg-purple-500 text-white px-3 py-1 rounded"
-                                    >
-                                        Credit +
-                                    </button>
-
-                                    <button
-                                        onClick={async () => {
-                                            const task = prompt("Enter Task");
-
-                                            if (!task) return;
-
-                                            await axios.post("http://localhost:5000/admin/assign-volunteer-task", {
-                                                volunteerId: v.volunteerId,
-                                                task: task
-                                            });
-
-                                            alert("Task Assigned ✅");
-                                            fetchVolunteers();
-                                        }}
-                                        className="bg-blue-500 text-white px-3 py-1 rounded"
-                                    >
-                                        Assign Task
-                                    </button>
-
-                                    {v.status === "approved" || v.status === "blocked" ? (
-                                        <button
-                                            onClick={() => toggleBlock(v.volunteerId)}
-                                            className={`px-3 py-1 rounded text-white ${v.status === "blocked"
-                                                    ? "bg-yellow-500"
-                                                    : "bg-black"
-                                                }`}
-                                        >
-                                            {v.status === "blocked" ? "Unblock" : "Block"}
-                                        </button>
-
-                                    ) : null}
-
-                                </td>
-
+                        <thead className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                            <tr>
+                                <th className="p-4">ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Credits</th>
+                                <th>Task</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
+                        </thead>
 
-                </table>
+                        <tbody>
+                            {filtered.map(v => (
+                                <tr key={v.volunteerId}
+                                    className="border-t border-white/10 hover:bg-white/10 transition duration-300 hover:scale-[1.01]">
+
+                                    <td className="p-3">{v.volunteerId}</td>
+                                    <td>{v.name}</td>
+                                    <td>{v.email}</td>
+
+                                    <td>
+                                        <span className={`px-3 py-1 rounded-full text-xs sm:text-sm font-semibold
+                                            ${v.status === "approved" && "bg-green-500/20 text-green-300"}
+                                            ${v.status === "pending" && "bg-yellow-500/20 text-yellow-300"}
+                                            ${v.status === "rejected" && "bg-red-500/20 text-red-300"}
+                                            ${v.status === "blocked" && "bg-gray-500/20 text-gray-300"}
+                                        `}>
+                                            {v.status}
+                                        </span>
+                                    </td>
+
+                                    <td className="font-bold text-yellow-300">
+                                        ⭐ {v.credits || 0}
+                                    </td>
+
+                                    <td>{v.task || "No Task"}</td>
+
+                                    <td className="flex gap-2 flex-wrap justify-center p-2 max-w-[250px] mx-auto">
+
+                                        <button onClick={() => setSelected(v)} className="btn">View</button>
+                                        <button
+                                            onClick={() => viewResume(v.volunteerId)}
+                                            className="btn blue"
+                                        >
+                                            Resume
+                                        </button>
+                                        <button onClick={() => approveVolunteer(v.volunteerId)} className="btn green">Approve</button>
+                                        <button onClick={() => rejectVolunteer(v.volunteerId)} className="btn red">Reject</button>
+                                        <button onClick={() => addCredit(v.volunteerId)} className="btn purple">+Credit</button>
+                                        <button onClick={() => removeCredit(v.volunteerId)} className="btn red">-Credit</button>
+
+                                        <button onClick={() => {
+                                            setCurrentVolunteer(v);
+                                            setTaskModal(true);
+                                        }} className="btn blue">Task</button>
+
+                                        {(v.status === "approved" || v.status === "blocked") && (
+                                            <button onClick={() => toggleBlock(v.volunteerId)} className="btn black">
+                                                {v.status === "blocked" ? "Unblock" : "Block"}
+                                            </button>
+                                        )}
+
+                                    </td>
+
+                                </tr>
+                            ))}
+                        </tbody>
+
+                    </table>
+
+                </div>
             </div>
 
-            {/* MODAL */}
+            {/* PROFILE MODAL */}
             {selected && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-xl w-96">
-
-                        <h2 className="text-2xl font-bold mb-4">
-                            Volunteer Profile
-                        </h2>
-
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center animate-fadeIn">
+                    <div className="bg-white text-black p-6 rounded-2xl w-[90%] sm:w-96 shadow-2xl animate-scaleUp">
+                        <h2 className="text-2xl font-bold mb-4">Volunteer Profile</h2>
                         <p><b>ID:</b> {selected.volunteerId}</p>
                         <p><b>Name:</b> {selected.name}</p>
                         <p><b>Email:</b> {selected.email}</p>
                         <p><b>Status:</b> {selected.status}</p>
-                        <p><b>Credits:</b> ⭐ {Number(selected.credits) || 0}</p>
+                        <p><b>Credits:</b> ⭐ {selected.credits || 0}</p>
+                        <button onClick={() => setSelected(null)}
+                            className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:scale-105 transition">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+
+
+
+
+
+            {resumeModal && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+
+                    <div className="bg-white w-[95%] sm:w-[800px] h-[80vh] rounded-2xl overflow-hidden flex flex-col">
+
+                        {/* HEADER */}
+                        <div className="flex justify-between items-center p-3 border-b">
+                            <h2 className="font-bold">📄 Resume</h2>
+
+                            <button
+                                onClick={() => setResumeModal(false)}
+                                className="bg-red-500 text-white px-3 py-1 rounded"
+                            >
+                                Close
+                            </button>
+                        </div>
+
+                        {/* PDF VIEW */}
+                        <iframe
+                            src={resumeUrl}
+                            className="w-full h-full"
+                        />
+
+                    </div>
+
+                </div>
+            )}
+
+
+
+
+            {/* TASK MODAL */}
+            {taskModal && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fadeIn">
+
+                    <div className="bg-white text-black w-[90%] sm:w-[520px] max-h-[80vh] overflow-y-auto p-6 rounded-2xl shadow-2xl animate-scaleUp">
+
+                        <h2 className="text-xl font-bold mb-4">Assign Task</h2>
+
+                        <div className="flex gap-2 mb-4">
+                            <input
+                                type="text"
+                                placeholder="Enter custom task..."
+                                value={customTask}
+                                onChange={(e) => setCustomTask(e.target.value)}
+                                className="flex-1 p-2 border rounded-lg"
+                            />
+                            <button
+                                onClick={() => {
+                                    if (!customTask.trim()) return alert("Enter task");
+                                    assignTask(customTask);
+                                }}
+                                className="bg-green-500 text-white px-4 rounded-lg hover:scale-105 transition"
+                            >
+                                Add
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            {taskList.map((task, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => assignTask(task)}
+                                    className="text-left p-3 bg-gray-100 hover:bg-indigo-100 rounded-lg transition hover:scale-[1.02]"
+                                >
+                                    • {task}
+                                </button>
+                            ))}
+                        </div>
 
                         <button
-                            onClick={() => setSelected(null)}
-                            className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded"
+                            onClick={() => setTaskModal(false)}
+                            className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:scale-105 transition"
                         >
                             Close
                         </button>
 
                     </div>
+                    <a href={resumeUrl} download className="bg-green-500 px-3 py-1 text-white rounded">
+                        Download
+                    </a>
                 </div>
             )}
+
+            {/* BUTTON STYLES */}
+            <style>{`
+                .btn {
+                    padding: 6px 10px;
+                    border-radius: 8px;
+                    font-size: 10px;
+                    font-weight: 600;
+                    transition: all 0.3s;
+                    background: rgba(255,255,255,0.1);
+                }
+                .btn:hover {
+                    transform: scale(1.1);
+                }
+
+                @media (min-width: 640px) {
+                    .btn {
+                        font-size: 12px;
+                        padding: 6px 12px;
+                    }
+                }
+
+                .green { background: linear-gradient(to right, #00c853, #64dd17); }
+                .red { background: linear-gradient(to right, #d50000, #ff1744); }
+                .purple { background: linear-gradient(to right, #6a11cb, #2575fc); }
+                .blue { background: linear-gradient(to right, #2196f3, #21cbf3); }
+                .black { background: linear-gradient(to right, #000000, #434343); }
+
+                @keyframes fadeIn {
+                    from { opacity: 0 }
+                    to { opacity: 1 }
+                }
+                @keyframes scaleUp {
+                    from { transform: scale(0.8); opacity: 0 }
+                    to { transform: scale(1); opacity: 1 }
+                }
+                .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
+                .animate-scaleUp { animation: scaleUp 0.3s ease-in-out; }
+            `}</style>
 
         </div>
     );

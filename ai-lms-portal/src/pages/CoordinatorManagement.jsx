@@ -1,517 +1,3 @@
-// // import React, { useState } from "react";
-
-// // export default function CoordinatorManagement() {
-
-// //   const [search, setSearch] = useState("");
-// //   const [selected, setSelected] = useState(null);
-
-// //   const [coordinators, setCoordinators] = useState([
-// //     {
-// //       id: "CO-2401",
-// //       name: "Ankit Verma",
-// //       email: "ankit@gmail.com",
-// //       status: "Pending",
-// //       blocked: false,
-// //       task: "None",
-// //       credits: 15,
-// //       phone: "9876543210",
-// //       city: "Delhi"
-// //     },
-// //     {
-// //       id: "CO-2402",
-// //       name: "Neha Singh",
-// //       email: "neha@gmail.com",
-// //       status: "Approved",
-// //       blocked: false,
-// //       task: "School Registration",
-// //       credits: 30,
-// //       phone: "9876541230",
-// //       city: "Lucknow"
-// //     }
-// //   ]);
-
-// //   // Approve
-// //   const approveCoordinator = (id) => {
-// //     setCoordinators(coordinators.map(c =>
-// //       c.id === id ? { ...c, status: "Approved" } : c
-// //     ));
-// //   };
-
-// //   // Reject
-// //   const rejectCoordinator = (id) => {
-// //     setCoordinators(coordinators.map(c =>
-// //       c.id === id ? { ...c, status: "Rejected" } : c
-// //     ));
-// //   };
-
-// //   // Block / Unblock
-// //   const toggleBlock = (id) => {
-// //     setCoordinators(coordinators.map(c =>
-// //       c.id === id ? { ...c, blocked: !c.blocked } : c
-// //     ));
-// //   };
-
-// //   // Assign task
-// //   const assignTask = (id) => {
-// //     const task = prompt("Enter Task");
-// //     if (!task) return;
-
-// //     setCoordinators(coordinators.map(c =>
-// //       c.id === id ? { ...c, task } : c
-// //     ));
-// //   };
-
-// //   // Add credit
-// //   const addCredit = (id) => {
-// //     const points = parseInt(prompt("Enter Credit Points"));
-// //     if (!points) return;
-
-// //     setCoordinators(coordinators.map(c =>
-// //       c.id === id ? { ...c, credits: c.credits + points } : c
-// //     ));
-// //   };
-
-// //   const filtered = coordinators.filter(c =>
-// //     c.name.toLowerCase().includes(search.toLowerCase())
-// //   );
-
-// //   return (
-
-// //     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-8">
-
-// //       <h1 className="text-3xl font-bold mb-8">
-// //         Coordinator Management Dashboard
-// //       </h1>
-
-// //       {/* Search */}
-// //       <input
-// //         type="text"
-// //         placeholder="Search Coordinator..."
-// //         className="w-full p-3 border rounded-lg mb-6 shadow"
-// //         onChange={(e) => setSearch(e.target.value)}
-// //       />
-
-// //       {/* Table */}
-// //       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-
-// //         <table className="w-full text-center">
-
-// //           <thead className="bg-indigo-500 text-white">
-// //             <tr>
-// //               <th className="p-3">ID</th>
-// //               <th>Name</th>
-// //               <th>Email</th>
-// //               <th>Status</th>
-// //               <th>Task</th>
-// //               <th>Credits</th>
-// //               <th>Actions</th>
-// //             </tr>
-// //           </thead>
-
-// //           <tbody>
-
-// //             {filtered.map(c => (
-
-// //               <tr key={c.id} className="border-t hover:bg-gray-50">
-
-// //                 <td className="p-3">{c.id}</td>
-// //                 <td>{c.name}</td>
-// //                 <td>{c.email}</td>
-
-// //                 <td>
-
-// //                   {c.status === "Approved" && (
-// //                     <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">
-// //                       Approved
-// //                     </span>
-// //                   )}
-
-// //                   {c.status === "Pending" && (
-// //                     <span className="bg-orange-200 text-orange-700 px-3 py-1 rounded-full text-sm">
-// //                       Pending
-// //                     </span>
-// //                   )}
-
-// //                   {c.status === "Rejected" && (
-// //                     <span className="bg-red-200 text-red-700 px-3 py-1 rounded-full text-sm">
-// //                       Rejected
-// //                     </span>
-// //                   )}
-
-// //                 </td>
-
-// //                 <td>{c.task}</td>
-
-// //                 <td className="font-bold text-purple-600">
-// //                   ⭐ {c.credits}
-// //                 </td>
-
-// //                 <td className="flex gap-2 justify-center flex-wrap p-2">
-
-// //                   <button
-// //                     onClick={() => setSelected(c)}
-// //                     className="bg-gray-700 text-white px-3 py-1 rounded"
-// //                   >
-// //                     View
-// //                   </button>
-
-// //                   <button
-// //                     onClick={() => approveCoordinator(c.id)}
-// //                     className="bg-green-500 text-white px-3 py-1 rounded"
-// //                   >
-// //                     Approve
-// //                   </button>
-
-// //                   <button
-// //                     onClick={() => rejectCoordinator(c.id)}
-// //                     className="bg-red-500 text-white px-3 py-1 rounded"
-// //                   >
-// //                     Reject
-// //                   </button>
-
-// //                   <button
-// //                     onClick={() => assignTask(c.id)}
-// //                     className="bg-blue-500 text-white px-3 py-1 rounded"
-// //                   >
-// //                     Task
-// //                   </button>
-
-// //                   <button
-// //                     onClick={() => addCredit(c.id)}
-// //                     className="bg-purple-500 text-white px-3 py-1 rounded"
-// //                   >
-// //                     Credit +
-// //                   </button>
-
-// //                   {c.status === "Approved" && (
-
-// //                     <button
-// //                       onClick={() => toggleBlock(c.id)}
-// //                       className={`px-3 py-1 rounded text-white ${
-// //                         c.blocked ? "bg-yellow-500" : "bg-black"
-// //                       }`}
-// //                     >
-// //                       {c.blocked ? "Unblock" : "Block"}
-// //                     </button>
-
-// //                   )}
-
-// //                 </td>
-
-// //               </tr>
-
-// //             ))}
-
-// //           </tbody>
-
-// //         </table>
-
-// //       </div>
-
-// //       {/* PROFILE MODAL */}
-
-// //       {selected && (
-
-// //         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-
-// //           <div className="bg-white p-6 rounded-xl w-96">
-
-// //             <h2 className="text-2xl font-bold mb-4">
-// //               Coordinator Profile
-// //             </h2>
-
-// //             <p><b>ID:</b> {selected.id}</p>
-// //             <p><b>Name:</b> {selected.name}</p>
-// //             <p><b>Email:</b> {selected.email}</p>
-// //             <p><b>Phone:</b> {selected.phone}</p>
-// //             <p><b>City:</b> {selected.city}</p>
-// //             <p><b>Task:</b> {selected.task}</p>
-// //             <p><b>Credits:</b> ⭐ {selected.credits}</p>
-
-// //             <button
-// //               onClick={() => setSelected(null)}
-// //               className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded"
-// //             >
-// //               Close
-// //             </button>
-
-// //           </div>
-
-// //         </div>
-
-// //       )}
-
-// //     </div>
-// //   );
-// // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-
-// export default function CoordinatorManagement() {
-
-//   const [search, setSearch] = useState("");
-//   const [selected, setSelected] = useState(null);
-//   const [coordinators, setCoordinators] = useState([]);
-
-//   // ================= FETCH DATA =================
-//   useEffect(() => {
-//     fetchCoordinators();
-//   }, []);
-
-//   const fetchCoordinators = async () => {
-//     try {
-//       const res = await axios.get("http://localhost:5000/admin/coordinators");
-//       setCoordinators(res.data.data);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   // ================= APPROVE =================
-//   const approveCoordinator = async (id) => {
-//     await axios.put(`http://localhost:5000/admin/update-coordinator-status/${id}`, {
-//       status: "approved"
-//     });
-//     fetchCoordinators();
-//   };
-
-//   // ================= REJECT =================
-//   const rejectCoordinator = async (id) => {
-//     await axios.put(`http://localhost:5000/admin/update-coordinator-status/${id}`, {
-//       status: "rejected"
-//     });
-//     fetchCoordinators();
-//   };
-
-//   // ================= BLOCK =================
-//   const toggleBlock = async (id) => {
-//     await axios.put(`http://localhost:5000/admin/toggle-block/${id}`);
-//     fetchCoordinators();
-//   };
-
-//   // ================= TASK =================
-//   const assignTask = async (id) => {
-//     const task = prompt("Enter Task");
-//     if (!task) return;
-
-//     await axios.post("http://localhost:5000/admin/assign-task", {
-//       coordinatorId: id,
-//       task
-//     });
-
-//     fetchCoordinators();
-//   };
-
-//   // ================= CREDIT =================
-//   const addCredit = async (id) => {
-//     const points = parseInt(prompt("Enter Credit Points"));
-//     if (!points) return;
-
-//     await axios.post("http://localhost:5000/admin/add-credits", {
-//       coordinatorId: id,
-//       credits: points
-//     });
-
-//     fetchCoordinators();
-//   };
-
-//   // ================= SEARCH =================
-//   const filtered = coordinators.filter(c =>
-//     c.name?.toLowerCase().includes(search.toLowerCase())
-//   );
-
-//   return (
-
-//     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-8">
-
-//       <h1 className="text-3xl font-bold mb-8">
-//         Coordinator Management Dashboard
-//       </h1>
-
-//       {/* Search */}
-//       <input
-//         type="text"
-//         placeholder="Search Coordinator..."
-//         className="w-full p-3 border rounded-lg mb-6 shadow"
-//         onChange={(e) => setSearch(e.target.value)}
-//       />
-
-//       {/* Table */}
-//       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-
-//         <table className="w-full text-center">
-
-//           <thead className="bg-indigo-500 text-white">
-//             <tr>
-//               <th className="p-3">ID</th>
-//               <th>Name</th>
-//               <th>Email</th>
-//               <th>Status</th>
-//               <th>Task</th>
-//               <th>Credits</th>
-//               <th>Actions</th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-
-//             {filtered.map(c => (
-
-//               <tr key={c.coordinatorId} className="border-t hover:bg-gray-50">
-
-//                 <td className="p-3">{c.coordinatorId}</td>
-//                 <td>{c.name}</td>
-//                 <td>{c.email}</td>
-
-//                 <td>
-//                   {c.status === "approved" && (
-//                     <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">
-//                       Approved
-//                     </span>
-//                   )}
-
-//                   {c.status === "pending" && (
-//                     <span className="bg-orange-200 text-orange-700 px-3 py-1 rounded-full text-sm">
-//                       Pending
-//                     </span>
-//                   )}
-
-//                   {c.status === "rejected" && (
-//                     <span className="bg-red-200 text-red-700 px-3 py-1 rounded-full text-sm">
-//                       Rejected
-//                     </span>
-//                   )}
-//                 </td>
-
-//                 <td>{c.task}</td>
-
-//                 <td className="font-bold text-purple-600">
-//                   ⭐ {c.creditPoints}
-//                 </td>
-
-//                 <td className="flex gap-2 justify-center flex-wrap p-2">
-
-//                   <button
-//                     onClick={() => setSelected(c)}
-//                     className="bg-gray-700 text-white px-3 py-1 rounded"
-//                   >
-//                     View
-//                   </button>
-
-//                   <button
-//                     onClick={() => approveCoordinator(c.coordinatorId)}
-//                     className="bg-green-500 text-white px-3 py-1 rounded"
-//                   >
-//                     Approve
-//                   </button>
-
-//                   <button
-//                     onClick={() => rejectCoordinator(c.coordinatorId)}
-//                     className="bg-red-500 text-white px-3 py-1 rounded"
-//                   >
-//                     Reject
-//                   </button>
-
-//                   <button
-//                     onClick={() => assignTask(c.coordinatorId)}
-//                     className="bg-blue-500 text-white px-3 py-1 rounded"
-//                   >
-//                     Task
-//                   </button>
-
-//                   <button
-//                     onClick={() => addCredit(c.coordinatorId)}
-//                     className="bg-purple-500 text-white px-3 py-1 rounded"
-//                   >
-//                     Credit +
-//                   </button>
-
-//                   {c.status === "approved" && (
-//                     <button
-//                       onClick={() => toggleBlock(c.coordinatorId)}
-//                       className={`px-3 py-1 rounded text-white ${
-//                         c.blocked ? "bg-yellow-500" : "bg-black"
-//                       }`}
-//                     >
-//                       {c.blocked ? "Unblock" : "Block"}
-//                     </button>
-//                   )}
-
-//                 </td>
-
-//               </tr>
-
-//             ))}
-
-//           </tbody>
-
-//         </table>
-
-//       </div>
-
-//       {/* MODAL */}
-
-//       {selected && (
-
-//         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-
-//           <div className="bg-white p-6 rounded-xl w-96">
-
-//             <h2 className="text-2xl font-bold mb-4">
-//               Coordinator Profile
-//             </h2>
-
-//             <p><b>ID:</b> {selected.coordinatorId}</p>
-//             <p><b>Name:</b> {selected.name}</p>
-//             <p><b>Email:</b> {selected.email}</p>
-//             <p><b>Phone:</b> {selected.mobile}</p>
-//             <p><b>Qualification:</b> {selected.qualification}</p>
-//             <p><b>Experience:</b> {selected.experience}</p>
-//             <p><b>Task:</b> {selected.task}</p>
-//             <p><b>Credits:</b> ⭐ {selected.credits}</p>
-
-//             <button
-//               onClick={() => setSelected(null)}
-//               className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded"
-//             >
-//               Close
-//             </button>
-
-//           </div>
-
-//         </div>
-
-//       )}
-
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -525,230 +11,296 @@ export default function CoordinatorManagement() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
   const [coordinators, setCoordinators] = useState([]);
+const [resumeModal, setResumeModal] = useState(false);
+  const [resumeUrl, setResumeUrl] = useState("");
+  const [taskModal, setTaskModal] = useState(false);
+  const [assignAllMode, setAssignAllMode] = useState(false);
+  const [currentCoordinator, setCurrentCoordinator] = useState(null);
+  const [customTask, setCustomTask] = useState("");
 
-  // ================= FETCH DATA =================
+  const taskList = [
+    "Register new school details (name, address, board, contact info)",
+    "Register new institute/coaching centers/partners",
+    "Upload and verify institute credentials",
+    "Monitor institute performance & enrollments",
+    "Monitor school performance & enrollments",
+    "Total no of free students added in LMS system",
+    "Total no of paid students added in LMS system",
+    "Verify payment status",
+    "New added / onboard volunteers",
+    "New added / onboard interns",
+    "Guide students through payment process",
+    "Contact schools/institutes for onboarding",
+    "Resolve student queries and doubts",
+    "Prepare daily performance reports",
+    "Prepare weekly performance reports",
+    "Work on portal (Edu/Bhakti/Olympia/Donation)",
+    "Conduct meetings with schools/institutes",
+    "Promote via WhatsApp & social media",
+    "Daily calling data update"
+  ];
+
   useEffect(() => {
     fetchCoordinators();
   }, []);
 
   const fetchCoordinators = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/admin/coordinators");
-      console.log("DATA:", res.data.data); // DEBUG
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/coordinators`);
       setCoordinators(res.data.data || []);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // ================= APPROVE =================
   const approveCoordinator = async (id) => {
-    await axios.put(`http://localhost:5000/admin/update-coordinator-status/${id}`, {
+    await axios.put(`${import.meta.env.VITE_API_URL}/admin/update-coordinator-status/${id}`, {
       status: "approved"
     });
     fetchCoordinators();
   };
 
-  // ================= REJECT =================
   const rejectCoordinator = async (id) => {
-    await axios.put(`http://localhost:5000/admin/update-coordinator-status/${id}`, {
+    await axios.put(`${import.meta.env.VITE_API_URL}/admin/update-coordinator-status/${id}`, {
       status: "rejected"
     });
     fetchCoordinators();
   };
+const toggleBlock = async (id) => {
+  try {
+    const res = await axios.put(`${import.meta.env.VITE_API_URL}/admin/toggle-block/${id}`);
+    
+    alert(res.data.message);
 
-  // ================= BLOCK =================
-  const toggleBlock = async (id) => {
-    await axios.put(`http://localhost:5000/admin/toggle-block/${id}`);
+    // UI update (optional)
     fetchCoordinators();
-  };
 
-  // ================= TASK =================
-  const assignTask = async (id) => {
-    const task = prompt("Enter Task");
-    if (!task) return;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-    await axios.post("http://localhost:5000/admin/assign-task", {
-      coordinatorId: id,
-      task
-    });
-
-    fetchCoordinators();
-  };
-
-  // ================= CREDIT =================
   const addCredit = async (id) => {
     const points = parseInt(prompt("Enter Credit Points"));
     if (!points) return;
 
-    await axios.post("http://localhost:5000/admin/add-credits", {
+    await axios.post(`${import.meta.env.VITE_API_URL}/admin/add-credits`, {
       coordinatorId: id,
       credits: points
     });
 
+
     fetchCoordinators();
   };
 
-  // ================= SEARCH =================
+  const removeCredit = async (id) => {
+    const points = parseInt(prompt("Enter Credit Points to Deduct"));
+    if (!points || points <= 0) return alert("Invalid points");
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/admin/remove-coordinator-credits`,
+        {
+          coordinatorId: id,
+          credits: points
+        }
+      );
+
+      alert(res.data.message || "Credits Deducted ✅");
+      fetchCoordinators();
+
+    } catch (err) {
+      alert("Error ❌");
+    }
+  };
+
+  const viewResume = (id) => {
+    const url = `${import.meta.env.VITE_API_URL}/admin/get-coordinator-resume/${id}`;
+    setResumeUrl(url);
+    setResumeModal(true);
+  };
+
+  const assignTask = async (task) => {
+    try {
+      if (assignAllMode) {
+        await axios.post(`${import.meta.env.VITE_API_URL}/admin/assign-task-all-coordinator`, { task });
+        alert("Task assigned to ALL Coordinators ✅");
+      } else {
+        if (!currentCoordinator) return;
+
+        await axios.post(`${import.meta.env.VITE_API_URL}/admin/assign-task`, {
+          coordinatorId: currentCoordinator.coordinatorId,
+          task
+        });
+
+        alert("Task assigned ✅");
+
+  
+      }
+
+      setTaskModal(false);
+      setAssignAllMode(false);
+      setCustomTask("");
+      fetchCoordinators();
+
+    } catch (err) {
+      alert("Error ❌");
+    }
+  };
+
   const filtered = coordinators.filter(c =>
     c.name?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] p-4 sm:p-6 md:p-8 text-white">
 
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-8">
-
-      <h1 className="text-3xl font-bold mb-8">
-        Coordinator Management Dashboard
+      {/* HEADER */}
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 text-center tracking-wide bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
+        🚀 Coordinator Management Dashboard
       </h1>
 
-      {/* Search */}
+      {/* ASSIGN ALL BUTTON */}
+      <button
+        onClick={() => {
+          setAssignAllMode(true);
+          setTaskModal(true);
+        }}
+        className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 transition-all px-5 py-2 rounded-xl mb-4 shadow-xl"
+      >
+        🚀 Assign Task to ALL Coordinators
+      </button>
+
+      {/* SEARCH */}
       <input
         type="text"
-        placeholder="Search Coordinator..."
-        className="w-full p-3 border rounded-lg mb-6 shadow"
+        placeholder="🔍 Search Coordinator..."
+        className="w-full p-3 sm:p-4 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg mb-6 focus:outline-none focus:ring-2 focus:ring-purple-400"
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* Table */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      {/* TABLE */}
+      <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="overflow-x-auto">
 
-        <table className="w-full text-center">
+          <table className="w-full text-center text-xs sm:text-sm md:text-base min-w-[800px]">
 
-          <thead className="bg-indigo-500 text-white">
-            <tr>
-              <th className="p-3">ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Task</th>
-              <th>Credits</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            {filtered.map(c => (
-
-              <tr key={c.coordinatorId} className="border-t hover:bg-gray-50">
-
-                <td className="p-3">{c.coordinatorId}</td>
-                <td>{c.name}</td>
-                <td>{c.email}</td>
-
-                <td>
-                  {c.status === "approved" && (
-                    <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm">
-                      Approved
-                    </span>
-                  )}
-
-                  {c.status === "pending" && (
-                    <span className="bg-orange-200 text-orange-700 px-3 py-1 rounded-full text-sm">
-                      Pending
-                    </span>
-                  )}
-
-                  {c.status === "rejected" && (
-                    <span className="bg-red-200 text-red-700 px-3 py-1 rounded-full text-sm">
-                      Rejected
-                    </span>
-                  )}
-                </td>
-
-                <td>{c.task || "None"}</td>
-
-                {/* ✅ FIXED CREDIT */}
-                <td className="font-bold text-purple-600">
-                  ⭐ {Number(c.credits) || 0}
-                </td>
-
-                <td className="flex gap-2 justify-center flex-wrap p-2">
-
-                  <button
-                    onClick={() => setSelected(c)}
-                    className="bg-gray-700 text-white px-3 py-1 rounded"
-                  >
-                    View
-                  </button>
-
-                  <button
-                    onClick={() => approveCoordinator(c.coordinatorId)}
-                    className="bg-green-500 text-white px-3 py-1 rounded"
-                  >
-                    Approve
-                  </button>
-
-                  <button
-                    onClick={() => rejectCoordinator(c.coordinatorId)}
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                  >
-                    Reject
-                  </button>
-
-                  <button
-                    onClick={() => assignTask(c.coordinatorId)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                  >
-                    Task
-                  </button>
-
-                  <button
-                    onClick={() => addCredit(c.coordinatorId)}
-                    className="bg-purple-500 text-white px-3 py-1 rounded"
-                  >
-                    Credit +
-                  </button>
-
-                  {c.status === "approved" && (
-                    <button
-                      onClick={() => toggleBlock(c.coordinatorId)}
-                      className={`px-3 py-1 rounded text-white ${
-                        c.blocked ? "bg-yellow-500" : "bg-black"
-                      }`}
-                    >
-                      {c.blocked ? "Unblock" : "Block"}
-                    </button>
-                  )}
-
-                </td>
-
+            <thead className="bg-gradient-to-r from-purple-600 to-indigo-600">
+              <tr>
+                <th className="p-3">ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Task</th>
+                <th>Credits</th>
+                <th>Actions</th>
               </tr>
+            </thead>
 
-            ))}
+            <tbody>
+              {filtered.map(c => (
+                <tr key={c.coordinatorId}
+                  className="border-t border-white/10 hover:bg-white/10 transition duration-300 hover:scale-[1.01]">
 
-          </tbody>
+                  <td className="p-3">{c.coordinatorId}</td>
+                  <td>{c.name}</td>
+                  <td>{c.email}</td>
 
-        </table>
+                  <td>
+                    <span className={`px-3 py-1 rounded-full text-xs sm:text-sm
+                      ${c.status === "approved" && "bg-green-500/20 text-green-300"}
+                      ${c.status === "pending" && "bg-yellow-500/20 text-yellow-300"}
+                      ${c.status === "rejected" && "bg-red-500/20 text-red-300"}
+                    `}>
+                      {c.status}
+                    </span>
+                  </td>
 
+                  <td>{c.task || "None"}</td>
+
+                  <td className="font-bold text-yellow-300">
+                    ⭐ {c.credits || 0}
+                  </td>
+
+                  <td className="flex gap-2 flex-wrap justify-center p-2">
+
+                    <button onClick={() => setSelected(c)} className="btn">View</button>
+                    <button onClick={() => viewResume(c.coordinatorId)} className="bg-blue-700 text-white px-3 py-1 rounded">Resume</button>
+
+                    <button onClick={() => approveCoordinator(c.id)} className="btn green">Approve</button>
+
+                    <button onClick={() => rejectCoordinator(c.id)} className="btn red">Reject</button>
+
+                    <button
+                      onClick={() => {
+                        setCurrentCoordinator(c);
+                        setAssignAllMode(false);
+                        setTaskModal(true);
+                      }}
+                      className="btn blue"
+                    >
+                      Task
+                    </button>
+
+                    <button onClick={() => addCredit(c.id)} className="btn purple">+Credit</button>
+                    <button onClick={() => removeCredit(c.id)} className="bg-red-600 text-white px-3 py-1 rounded">Credit -</button>
+
+                    {c.status === "approved" && (
+                      <button onClick={() => toggleBlock(c.coordinatorId)} className="btn black">
+                        {c.blocked ? "Unblock" : "Block"}
+                      </button>
+                    )}
+
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+
+        </div>
       </div>
 
-      {/* MODAL */}
-      {selected && (
+      {/* TASK MODAL */}
+      {taskModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fadeIn">
 
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white text-black w-[90%] sm:w-[500px] max-h-[80vh] overflow-y-auto p-6 rounded-2xl shadow-2xl animate-scaleUp">
 
-          <div className="bg-white p-6 rounded-xl w-96">
+            <h2 className="text-xl font-bold mb-4">Assign Task</h2>
 
-            <h2 className="text-2xl font-bold mb-4">
-              Coordinator Profile
-            </h2>
+            <div className="flex gap-2 mb-4">
+              <input
+                type="text"
+                placeholder="Enter custom task..."
+                value={customTask}
+                onChange={(e) => setCustomTask(e.target.value)}
+                className="flex-1 p-2 border rounded-lg"
+              />
+              <button
+                onClick={() => assignTask(customTask)}
+                className="bg-green-500 text-white px-4 rounded-lg"
+              >
+                Add
+              </button>
+            </div>
 
-            <p><b>ID:</b> {selected.coordinatorId}</p>
-            <p><b>Name:</b> {selected.name}</p>
-            <p><b>Email:</b> {selected.email}</p>
-            <p><b>Phone:</b> {selected.mobile}</p>
-            <p><b>Qualification:</b> {selected.qualification}</p>
-            <p><b>Experience:</b> {selected.experience}</p>
-            <p><b>Task:</b> {selected.task || "None"}</p>
-
-            {/* ✅ FIXED CREDIT */}
-            <p><b>Credits:</b> ⭐ {Number(selected.credits) || 0}</p>
+            <div className="flex flex-col gap-2">
+              {taskList.map((task, i) => (
+                <button
+                  key={i}
+                  onClick={() => assignTask(task)}
+                  className="text-left p-3 bg-gray-100 hover:bg-indigo-100 rounded-lg"
+                >
+                  • {task}
+                </button>
+              ))}
+            </div>
 
             <button
-              onClick={() => setSelected(null)}
-              className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded"
+              onClick={() => setTaskModal(false)}
+              className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg"
             >
               Close
             </button>
@@ -756,8 +308,73 @@ export default function CoordinatorManagement() {
           </div>
 
         </div>
-
       )}
+
+      {/* VIEW MODAL */}
+      {selected && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center animate-fadeIn">
+          <div className="bg-white text-black p-6 rounded-2xl w-[90%] sm:w-96 shadow-2xl animate-scaleUp">
+            <h2 className="text-2xl font-bold mb-4">Coordinator Profile</h2>
+
+            <p><b>ID:</b> {selected.coordinatorId}</p>
+            <p><b>Name:</b> {selected.name}</p>
+            <p><b>Email:</b> {selected.email}</p>
+            <p><b>Status:</b> {selected.status}</p>
+            <p><b>Task:</b> {selected.task || "None"}</p>
+            <p><b>Credits:</b> ⭐ {selected.credits || 0}</p>
+
+            <button
+              onClick={() => setSelected(null)}
+              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* RESUME MODAL */}
+      {resumeModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white w-[95%] sm:w-[800px] h-[80vh] rounded-2xl flex flex-col">
+            <div className="flex justify-between p-3 border-b">
+              <h2>📄 Resume</h2>
+              <button onClick={() => setResumeModal(false)} className="bg-red-500 text-white px-3 py-1 rounded">Close</button>
+            </div>
+            <iframe src={resumeUrl} className="w-full h-full" />
+          </div>
+        </div>
+      )}
+
+      {/* BUTTON STYLES */}
+      <style>{`
+        .btn {
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 12px;
+          font-weight: 600;
+          transition: all 0.3s;
+          background: rgba(255,255,255,0.1);
+        }
+        .btn:hover { transform: scale(1.1); }
+
+        .green { background: linear-gradient(to right, #00c853, #64dd17); }
+        .red { background: linear-gradient(to right, #d50000, #ff1744); }
+        .purple { background: linear-gradient(to right, #6a11cb, #2575fc); }
+        .blue { background: linear-gradient(to right, #2196f3, #21cbf3); }
+        .black { background: linear-gradient(to right, #000000, #434343); }
+
+        @keyframes fadeIn {
+          from { opacity: 0 }
+          to { opacity: 1 }
+        }
+        @keyframes scaleUp {
+          from { transform: scale(0.8); opacity: 0 }
+          to { transform: scale(1); opacity: 1 }
+        }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
+        .animate-scaleUp { animation: scaleUp 0.3s ease-in-out; }
+      `}</style>
 
     </div>
   );
